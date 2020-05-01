@@ -29,27 +29,27 @@ class PostAdapter(val items : ArrayList<Post>, val context: Context) : RecyclerV
         holder.text.text = post.text
 
         if (post.likes == 0) {
-            holder.likes.text = ""
-            holder.likes.setCompoundDrawablesRelativeWithIntrinsicBounds(R.drawable.likes_none, 0, 0, 0)
+            holder.likesCounter.text = ""
+            holder.likesIcon.setImageResource(R.drawable.likes_none)
         } else {
-            holder.likes.text = post.likes.toString()
-            holder.likes.setCompoundDrawablesRelativeWithIntrinsicBounds(R.drawable.likes_yes, 0, 0, 0)
+            holder.likesCounter.text = post.likes.toString()
+            holder.likesIcon.setImageResource(R.drawable.likes_yes)
         }
 
         if (post.comments == 0) {
-            holder.comments.text = ""
-            holder.comments.setCompoundDrawablesRelativeWithIntrinsicBounds(R.drawable.comments_none, 0, 0, 0)
+            holder.commentsCounter.text = ""
+            holder.commentsIcon.setImageResource(R.drawable.comments_none)
         } else {
-            holder.likes.text = post.likes.toString()
-            holder.likes.setCompoundDrawablesRelativeWithIntrinsicBounds(R.drawable.comments_yes, 0, 0, 0)
+            holder.commentsCounter.text = post.comments.toString()
+            holder.commentsIcon.setImageResource(R.drawable.comments_yes)
         }
 
         if (post.shares == 0) {
-            holder.shares.text = ""
-            holder.shares.setCompoundDrawablesRelativeWithIntrinsicBounds(R.drawable.shares_none, 0, 0, 0)
+            holder.sharesCounter.text = ""
+            holder.sharesIcon.setImageResource(R.drawable.shares_none)
         } else {
-            holder.shares.text = post.likes.toString()
-            holder.shares.setCompoundDrawablesRelativeWithIntrinsicBounds(R.drawable.shares_yes, 0, 0, 0)
+            holder.sharesCounter.text = post.shares.toString()
+            holder.sharesIcon.setImageResource(R.drawable.shares_yes)
         }
     }
 
@@ -58,9 +58,12 @@ class PostAdapter(val items : ArrayList<Post>, val context: Context) : RecyclerV
         val name: TextView = view.userName
         val date: TextView = view.date
         val text: TextView = view.text
-        val likes: Button = view.likes
-        val comments: Button = view.comments
-        val shares: Button = view.shares
+        val likesIcon: ImageView = view.likesIcon
+        val likesCounter: TextView = view.likesCounter
+        val commentsIcon: ImageView = view.commentsIcon
+        val commentsCounter: TextView = view.commentsCounter
+        val sharesIcon: ImageView = view.sharesIcon
+        val sharesCounter: TextView = view.sharesCounter
     }
 
     fun secondsToString(seconds: Long):String {

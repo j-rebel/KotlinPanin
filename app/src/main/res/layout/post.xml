@@ -1,9 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tool="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    xmlns:tool="http://schemas.android.com/tools">
+    android:layout_marginTop="10dp">
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
@@ -51,39 +52,71 @@
             app:layout_constraintTop_toBottomOf="@id/avatar"
             tool:text="@string/ipsum_string" />
 
-        <Button
-            android:id="@+id/likes"
-            android:layout_width="65dp"
+        <LinearLayout
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="8dp"
-            android:background="@color/colorWhite"
-            app:layout_constraintEnd_toStartOf="@id/comments"
-            app:layout_constraintTop_toBottomOf="@id/text"
-            tool:drawableStart="@drawable/likes_yes"
-            tool:text="15" />
-
-        <Button
-            android:id="@+id/comments"
-            android:layout_width="65dp"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="8dp"
-            android:background="@color/colorWhite"
-            app:layout_constraintEnd_toStartOf="@id/shares"
-            app:layout_constraintTop_toBottomOf="@id/text"
-            tool:drawableStart="@drawable/comments_yes"
-            tool:text="20" />
-
-        <Button
-            android:id="@+id/shares"
-            android:layout_width="65dp"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="8dp"
-            android:background="@color/colorWhite"
+            android:layout_marginTop="16dp"
+            android:orientation="horizontal"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/text"
-            tool:drawableStart="@drawable/shares_yes"
-            tool:text="7" />
+            app:layout_constraintTop_toBottomOf="@+id/text">
+
+            <ImageView
+                android:id="@+id/likesIcon"
+                android:layout_width="24dp"
+                android:layout_height="24dp"
+                android:layout_marginEnd="5dp"
+                android:layout_weight="1"
+                android:contentDescription="@string/app_name"
+                tool:srcCompat="@drawable/likes_yes" />
+
+            <TextView
+                android:id="@+id/likesCounter"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="5dp"
+                android:layout_weight="1"
+                android:textColor="@color/colorBlack"
+                tool:text="15" />
+
+            <ImageView
+                android:id="@+id/commentsIcon"
+                android:layout_width="24dp"
+                android:layout_height="24dp"
+                android:layout_marginStart="15dp"
+                android:layout_marginEnd="5dp"
+                android:layout_weight="1"
+                android:contentDescription="@string/app_name"
+                tool:srcCompat="@drawable/comments_yes" />
+
+            <TextView
+                android:id="@+id/commentsCounter"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="5dp"
+                android:layout_weight="1"
+                android:textColor="@color/colorBlack"
+                tool:text="20" />
+
+            <ImageView
+                android:id="@+id/sharesIcon"
+                android:layout_width="24dp"
+                android:layout_height="24dp"
+                android:layout_marginStart="15dp"
+                android:layout_marginEnd="5dp"
+                android:layout_weight="1"
+                android:contentDescription="@string/app_name"
+                tool:srcCompat="@drawable/shares_yes" />
+
+            <TextView
+                android:id="@+id/sharesCounter"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="5dp"
+                android:layout_weight="1"
+                android:textColor="@color/colorBlack"
+                tool:text="7" />
+        </LinearLayout>
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 
-    </androidx.cardview.widget.CardView>
+</androidx.cardview.widget.CardView>
