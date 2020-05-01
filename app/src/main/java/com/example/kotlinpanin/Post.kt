@@ -1,6 +1,5 @@
 package com.example.kotlinpanin
 
-import android.graphics.drawable.Drawable
 import java.util.*
 
 data class Post(val posterName: String,

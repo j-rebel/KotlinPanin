@@ -4,11 +4,12 @@ import android.content.Context
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Button
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import kotlinx.android.synthetic.main.post.view.*
+import java.util.*
+import kotlin.collections.ArrayList
 
 class PostAdapter(val items : ArrayList<Post>, val context: Context) : RecyclerView.Adapter<PostAdapter.ViewHolder>() {
 
@@ -66,7 +67,9 @@ class PostAdapter(val items : ArrayList<Post>, val context: Context) : RecyclerV
         val sharesCounter: TextView = view.sharesCounter
     }
 
-    fun secondsToString(seconds: Long):String {
+    fun secondsToString(postDateInMillis: Long):String {
+        val milliseconds = Date(2020, 8, 15).time - postDateInMillis
+        val seconds = milliseconds / 1000
         val minutes: Long = seconds / 60
         val hours: Long = minutes / 60
         val days: Long = hours / 24
@@ -89,7 +92,7 @@ class PostAdapter(val items : ArrayList<Post>, val context: Context) : RecyclerV
             in 12960000..31103999 -> "$months месяцев назад"
             in 31104000..62207999 -> "Год назад"
             in 62208000..Long.MAX_VALUE -> "Несколько лет назад"
-            else -> ""
+            else -> milliseconds.toString()
         }
 
     }
