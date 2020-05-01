@@ -1,16 +1,16 @@
+package com.example.kotlinpanin
+
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.example.kotlinpanin.Post
-import com.example.kotlinpanin.PostAdapter
-import com.example.kotlinpanin.R
+
 import kotlinx.android.synthetic.main.activity_main.*
 import java.util.*
 import kotlin.collections.ArrayList
 
 class MainActivity : AppCompatActivity() {
 
-    val posts: ArrayList<Post> = ArrayList()
+    private val posts: ArrayList<Post> = ArrayList()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
