@@ -57,20 +57,20 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="8dp"
             android:background="@color/colorWhite"
-            app:layout_constraintEnd_toStartOf="@id/coments"
+            app:layout_constraintEnd_toStartOf="@id/comments"
             app:layout_constraintTop_toBottomOf="@id/text"
             tool:drawableStart="@drawable/likes_yes"
             tool:text="15" />
 
         <Button
-            android:id="@+id/coments"
+            android:id="@+id/comments"
             android:layout_width="65dp"
             android:layout_height="wrap_content"
             android:layout_marginTop="8dp"
             android:background="@color/colorWhite"
             app:layout_constraintEnd_toStartOf="@id/shares"
             app:layout_constraintTop_toBottomOf="@id/text"
-            tool:drawableStart="@drawable/coments_yes"
+            tool:drawableStart="@drawable/comments_yes"
             tool:text="20" />
 
         <Button
