@@ -8,10 +8,9 @@ import android.widget.ImageView
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import kotlinx.android.synthetic.main.post.view.*
-import java.util.*
-import kotlin.collections.ArrayList
+import org.joda.time.LocalDateTime
 
-class PostAdapter(val items : ArrayList<Post>, val context: Context) : RecyclerView.Adapter<PostAdapter.ViewHolder>() {
+class PostAdapter(private val items : List<Post>, private val context: Context) : RecyclerView.Adapter<PostAdapter.ViewHolder>() {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         return ViewHolder(LayoutInflater.from(context).inflate(R.layout.post, parent, false))
@@ -25,7 +24,7 @@ class PostAdapter(val items : ArrayList<Post>, val context: Context) : RecyclerV
         val post: Post = items[position]
 
         holder.avatar.setImageResource(post.posterAvatar)
-        holder.date.text = secondsToString(post.date.time)
+        holder.date.text = secondsToString(post.date.toDate().time)
         holder.name.text = post.posterName
         holder.text.text = post.text
 
@@ -67,8 +66,8 @@ class PostAdapter(val items : ArrayList<Post>, val context: Context) : RecyclerV
         val sharesCounter: TextView = view.sharesCounter
     }
 
-    fun secondsToString(postDateInMillis: Long):String {
-        val milliseconds = System.currentTimeMillis() - postDateInMillis
+    private fun secondsToString(postDateInMillis: Long):String {
+        val milliseconds = LocalDateTime.now().toDate().time - postDateInMillis
 
         val seconds = milliseconds / 1000
         val minutes: Long = seconds / 60

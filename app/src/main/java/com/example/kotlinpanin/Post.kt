@@ -1,10 +1,10 @@
 package com.example.kotlinpanin
 
-import java.util.*
+import org.joda.time.LocalDateTime
 
 data class Post(val posterName: String,
                 val posterAvatar: Int,
-                val date: Date,
+                val date: LocalDateTime,
                 val text: String,
                 val likes: Int,
                 val comments: Int,
