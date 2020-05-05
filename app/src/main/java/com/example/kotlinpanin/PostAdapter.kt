@@ -68,7 +68,8 @@ class PostAdapter(val items : ArrayList<Post>, val context: Context) : RecyclerV
     }
 
     fun secondsToString(postDateInMillis: Long):String {
-        val milliseconds = Date(2020, 8, 15).time - postDateInMillis
+        val milliseconds = System.currentTimeMillis() - postDateInMillis
+
         val seconds = milliseconds / 1000
         val minutes: Long = seconds / 60
         val hours: Long = minutes / 60
@@ -76,25 +77,23 @@ class PostAdapter(val items : ArrayList<Post>, val context: Context) : RecyclerV
         val months: Long = days / 30
         val years: Long = months / 12
 
-        return when (seconds) {
-            in 0..59 -> "Менее минуты назад"
-            in 60..119 -> "Минуту назад"
-            in 120..299 -> "$minutes минуты назад"
-            in 300..3599 -> "$minutes минут назад"
-            in 3600..7199 -> "Час назад"
-            in 7200..17999 -> "$hours часа назад"
-            in 18000..86399 -> "$hours часов назад"
-            in 86400..172799 -> "День назад"
-            in 172800..431999 -> "$days дня назад"
-            in 432000..2591999 -> "$days дней назад"
-            in 2592000..5183999 -> "Месяц назад"
-            in 5184000..12959999 -> "$months месяца назад"
-            in 12960000..31103999 -> "$months месяцев назад"
-            in 31104000..62207999 -> "Год назад"
-            in 62208000..Long.MAX_VALUE -> "Несколько лет назад"
-            else -> milliseconds.toString()
-        }
+        val periodMap = mapOf(
+                Pair(0, years) to R.plurals.plurals_years,
+                Pair(1, months) to R.plurals.plurals_months,
+                Pair(2, days) to R.plurals.plurals_days,
+                Pair(3, hours) to R.plurals.plurals_hours,
+                Pair(4, minutes) to R.plurals.plurals_minutes
+        )
 
+        for ((k, v) in periodMap) {
+            if (k.second > 0) {
+                return context.resources.getQuantityString(
+                        v,
+                        k.second.toInt(),
+                        k.second.toInt())
+            }
+        }
+        return context.resources.getString(R.string.less_a_minute)
     }
 }
 

@@ -6,4 +6,46 @@
                 aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat
                 nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui
                 officia deserunt mollit anim id est laborum.</string>
+
+    <string name="less_a_minute">Less a minute ago</string>
+
+    <plurals name="plurals_minutes">
+        <item quantity="one">%1$d minute ago</item>
+        <item quantity="two">%1$d minutes ago</item>
+        <item quantity="few">%1$d minutes ago</item>
+        <item quantity="many">%1$d minutes ago</item>
+        <item quantity="other">%1$d minutes ago</item>
+    </plurals>
+
+    <plurals name="plurals_hours">
+        <item quantity="one">%1$d hour ago</item>
+        <item quantity="two">%1$d hours ago</item>
+        <item quantity="few">%1$d hours ago</item>
+        <item quantity="many">%1$d hours ago</item>
+        <item quantity="other">%1$d hours ago</item>
+    </plurals>
+
+    <plurals name="plurals_days">
+        <item quantity="one">%1$d day ago</item>
+        <item quantity="two">%1$d days ago</item>
+        <item quantity="few">%1$d days ago</item>
+        <item quantity="many">%1$d days ago</item>
+        <item quantity="other">%1$d days ago</item>
+    </plurals>
+
+    <plurals name="plurals_months">
+        <item quantity="one">%1$d month ago</item>
+        <item quantity="two">%1$d months ago</item>
+        <item quantity="few">%1$d months ago</item>
+        <item quantity="many">%1$d months ago</item>
+        <item quantity="other">%1$d months ago</item>
+    </plurals>
+
+    <plurals name="plurals_years">
+        <item quantity="one">%1$d year ago</item>
+        <item quantity="two">%1$d years ago</item>
+        <item quantity="few">%1$d years ago</item>
+        <item quantity="many">%1$d years ago</item>
+        <item quantity="other">%1$d years ago</item>
+    </plurals>
 </resources>
