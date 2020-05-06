@@ -1,14 +1,19 @@
 package com.example.kotlinpanin
 
+import android.content.Context
+import android.content.Intent
+import android.net.Uri
+import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
+import androidx.core.content.ContextCompat.startActivity
 import androidx.recyclerview.widget.RecyclerView
 import kotlinx.android.synthetic.main.post.view.*
 
-class PostAdapter(private val items : List<PostUiModel>) : RecyclerView.Adapter<PostAdapter.ViewHolder>() {
+class PostAdapter(private val items : List<PostUiModel>, private val context: Context) : RecyclerView.Adapter<PostAdapter.ViewHolder>() {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         return ViewHolder(LayoutInflater.from(parent.context).inflate(R.layout.post, parent, false))
@@ -25,6 +30,14 @@ class PostAdapter(private val items : List<PostUiModel>) : RecyclerView.Adapter<
         holder.date.text = postUiModel.dateFormatted
         holder.name.text = postUiModel.post.posterName
         holder.text.text = postUiModel.post.text
+        holder.address.text = postUiModel.post.address
+        holder.geoIcon.setOnClickListener{
+            val intent = Intent().apply {
+                action = Intent.ACTION_VIEW
+                data = Uri.parse("geo:${postUiModel.post.geo.first},${postUiModel.post.geo.second}")
+            }
+            startActivity(context, intent, Bundle.EMPTY)
+        }
 
         holder.likesCounter.text = postUiModel.likesCounterString
         holder.likesIcon.setImageResource(postUiModel.likesIcon)
@@ -55,6 +68,8 @@ class PostAdapter(private val items : List<PostUiModel>) : RecyclerView.Adapter<
         val name: TextView = view.userName
         val date: TextView = view.date
         val text: TextView = view.text
+        val address: TextView = view.address
+        val geoIcon: ImageView = view.geoIcon
         val likesIcon: ImageView = view.likesIcon
         val likesCounter: TextView = view.likesCounter
         val commentsIcon: ImageView = view.commentsIcon

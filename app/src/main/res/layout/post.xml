@@ -15,6 +15,7 @@
             android:id="@+id/avatar"
             android:layout_width="75dp"
             android:layout_height="75dp"
+            android:layout_marginTop="8dp"
             android:contentDescription="@string/app_name"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
@@ -53,6 +54,19 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/avatar"
             tool:text="@string/ipsum_string" />
+
+        <ImageView
+            android:id="@+id/geoIcon"
+            android:layout_width="24dp"
+            android:layout_height="24dp"
+            android:layout_marginStart="8dp"
+            android:layout_marginTop="8dp"
+            android:layout_weight="1"
+            android:contentDescription="@string/app_name"
+            app:layout_constraintStart_toEndOf="@+id/avatar"
+            app:layout_constraintTop_toBottomOf="@+id/userName"
+            app:srcCompat="@drawable/location"
+            tool:srcCompat="@drawable/location" />
 
         <LinearLayout
             android:layout_width="wrap_content"
@@ -120,7 +134,18 @@
                 android:minWidth="25dp"
                 android:textColor="@color/colorBlack"
                 tool:text="7" />
+
         </LinearLayout>
+
+        <TextView
+            android:id="@+id/address"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
+            android:layout_marginTop="8dp"
+            app:layout_constraintStart_toEndOf="@+id/geoIcon"
+            app:layout_constraintTop_toBottomOf="@+id/userName"
+            tool:text="город Москва" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 

@@ -13,6 +13,6 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
         postList.layoutManager = LinearLayoutManager(this)
-        postList.adapter = PostAdapter(posts.map(Post::toUiModel))
+        postList.adapter = PostAdapter(posts.map(Post::toUiModel), this)
     }
 }
