@@ -3,6 +3,7 @@ package com.example.kotlinpanin
 import android.content.Context
 import android.content.Intent
 import android.net.Uri
+import android.opengl.Visibility
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -11,6 +12,11 @@ import android.widget.ImageView
 import android.widget.TextView
 import androidx.core.content.ContextCompat.startActivity
 import androidx.recyclerview.widget.RecyclerView
+import com.bumptech.glide.Glide
+import com.google.android.youtube.player.YouTubeInitializationResult
+import com.google.android.youtube.player.YouTubePlayer
+import com.google.android.youtube.player.YouTubePlayerView
+import com.google.api.client.googleapis.javanet.GoogleNetHttpTransport
 import kotlinx.android.synthetic.main.post.view.*
 
 class PostAdapter(private val items : List<PostUiModel>, private val context: Context) : RecyclerView.Adapter<PostAdapter.ViewHolder>() {
@@ -26,11 +32,39 @@ class PostAdapter(private val items : List<PostUiModel>, private val context: Co
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         val postUiModel: PostUiModel = items[position]
 
-        holder.avatar.setImageResource(postUiModel.post.posterAvatar)
+        Glide.with(context)
+                .load(postUiModel.post.posterAvatar)
+                .into(holder.avatar)
         holder.date.text = postUiModel.dateFormatted
         holder.name.text = postUiModel.post.posterName
+
+        Glide.with(context)
+                .load("https://img.youtube.com/vi/yNLtreZkkL0/0.jpg")
+                .into(holder.preview)
+        Glide.with(context)
+                .load(R.drawable.play)
+                .into(holder.playBtn)
+        holder.playBtn.setOnClickListener{
+            holder.preview.visibility = View.GONE
+            holder.playBtn.visibility = View.GONE
+            holder.youtubePlayerView.initialize("AIzaSyDSdq4pV4D-OpQi9bK1ngfE3sQoLZftkCU",
+                    object : YouTubePlayer.OnInitializedListener {
+                        override fun onInitializationSuccess(provider: YouTubePlayer.Provider,
+                                                             youTubePlayer: YouTubePlayer, b: Boolean) {
+                            youTubePlayer.cueVideo("yNLtreZkkL0")
+                        }
+
+                        override fun onInitializationFailure(provider: YouTubePlayer.Provider,
+                                                             youTubeInitializationResult: YouTubeInitializationResult) {
+                        }
+                    })
+        }
+
         holder.text.text = postUiModel.post.text
         holder.address.text = postUiModel.post.address
+        Glide.with(context)
+                .load(R.drawable.location)
+                .into(holder.geoIcon)
         holder.geoIcon.setOnClickListener{
             val intent = Intent().apply {
                 action = Intent.ACTION_VIEW
@@ -40,18 +74,24 @@ class PostAdapter(private val items : List<PostUiModel>, private val context: Co
         }
 
         holder.likesCounter.text = postUiModel.likesCounterString
-        holder.likesIcon.setImageResource(postUiModel.likesIcon)
+        Glide.with(context)
+                .load(postUiModel.likesIcon)
+                .into(holder.likesIcon)
         holder.likesIcon.setOnClickListener{
             if (postUiModel.post.isLiked) {
                 postUiModel.post.isLiked = false
                 postUiModel.post.likes--
-                holder.likesIcon.setImageResource(R.drawable.likes_none)
+                Glide.with(context)
+                        .load(R.drawable.likes_none)
+                        .into(holder.likesIcon)
                 holder.likesCounter.text = if (postUiModel.post.likes > 0) postUiModel.post.likes.toString() else ""
 
             } else {
                 postUiModel.post.isLiked = true
                 postUiModel.post.likes++
-                holder.likesIcon.setImageResource(R.drawable.likes_yes)
+                Glide.with(context)
+                        .load(R.drawable.likes_yes)
+                        .into(holder.likesIcon)
                 holder.likesCounter.text = postUiModel.post.likes.toString()
             }
         }
@@ -67,6 +107,9 @@ class PostAdapter(private val items : List<PostUiModel>, private val context: Co
         val avatar: ImageView = view.avatar
         val name: TextView = view.userName
         val date: TextView = view.date
+        val youtubePlayerView: YouTubePlayerView = view.youtubePlayerView
+        val preview: ImageView = view.preview
+        val playBtn: ImageView = view.playBtn
         val text: TextView = view.text
         val address: TextView = view.address
         val geoIcon: ImageView = view.geoIcon

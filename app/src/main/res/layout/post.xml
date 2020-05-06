@@ -43,6 +43,38 @@
             app:layout_constraintTop_toBottomOf="@id/date"
             tool:text="Test User" />
 
+        <FrameLayout
+            android:id="@+id/youtubeLayout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:orientation="vertical"
+            app:layout_constraintTop_toBottomOf="@+id/avatar"
+            tool:layout_editor_absoluteX="16dp">
+
+            <com.google.android.youtube.player.YouTubePlayerView
+                android:id="@+id/youtubePlayerView"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" />
+
+            <ImageView
+                android:id="@+id/preview"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:contentDescription="@string/app_name"
+                tool:srcCompat="@mipmap/preview" />
+
+            <ImageView
+                android:id="@+id/playBtn"
+                android:layout_width="100dp"
+                android:layout_height="100dp"
+                android:layout_gravity="center_horizontal|center_vertical"
+                android:contentDescription="@string/app_name"
+                android:scaleType="fitCenter"
+                app:srcCompat="@drawable/play" />
+
+        </FrameLayout>
+
         <TextView
             android:id="@+id/text"
             android:layout_width="match_parent"
@@ -52,7 +84,7 @@
             android:textSize="18sp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/avatar"
+            app:layout_constraintTop_toBottomOf="@id/youtubeLayout"
             tool:text="@string/ipsum_string" />
 
         <ImageView

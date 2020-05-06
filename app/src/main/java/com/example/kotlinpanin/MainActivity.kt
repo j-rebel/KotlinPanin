@@ -3,9 +3,10 @@ package com.example.kotlinpanin
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.google.android.youtube.player.YouTubeBaseActivity
 import kotlinx.android.synthetic.main.activity_main.*
 
-class MainActivity : AppCompatActivity() {
+class MainActivity : YouTubeBaseActivity() {
 
     private var posts: List<Post> = TestPostRepository().getPosts()
 
