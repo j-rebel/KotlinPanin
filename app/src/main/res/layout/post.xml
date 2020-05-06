@@ -77,6 +77,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginEnd="5dp"
                 android:layout_weight="1"
+                android:minWidth="25dp"
                 android:textColor="@color/colorBlack"
                 tool:text="15" />
 
@@ -96,6 +97,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginEnd="5dp"
                 android:layout_weight="1"
+                android:minWidth="25dp"
                 android:textColor="@color/colorBlack"
                 tool:text="20" />
 
@@ -115,6 +117,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginEnd="5dp"
                 android:layout_weight="1"
+                android:minWidth="25dp"
                 android:textColor="@color/colorBlack"
                 tool:text="7" />
         </LinearLayout>
