@@ -1,6 +1,5 @@
 package com.example.kotlinpanin
 
-import android.content.Context
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -8,12 +7,11 @@ import android.widget.ImageView
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import kotlinx.android.synthetic.main.post.view.*
-import org.joda.time.LocalDateTime
 
-class PostAdapter(private val items : List<Post>, private val context: Context) : RecyclerView.Adapter<PostAdapter.ViewHolder>() {
+class PostAdapter(private val items : List<PostUiModel>) : RecyclerView.Adapter<PostAdapter.ViewHolder>() {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
-        return ViewHolder(LayoutInflater.from(context).inflate(R.layout.post, parent, false))
+        return ViewHolder(LayoutInflater.from(parent.context).inflate(R.layout.post, parent, false))
     }
 
     override fun getItemCount(): Int {
@@ -21,34 +19,35 @@ class PostAdapter(private val items : List<Post>, private val context: Context) 
     }
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-        val post: Post = items[position]
+        val postUiModel: PostUiModel = items[position]
 
-        holder.avatar.setImageResource(post.posterAvatar)
-        holder.date.text = secondsToString(post.date.toDate().time)
-        holder.name.text = post.posterName
-        holder.text.text = post.text
+        holder.avatar.setImageResource(postUiModel.post.posterAvatar)
+        holder.date.text = postUiModel.dateFormatted
+        holder.name.text = postUiModel.post.posterName
+        holder.text.text = postUiModel.post.text
 
-        if (post.likes == 0) {
+        // TODO эти все ветвления тоже можно заранее предусмотреть
+        if (postUiModel.post.likes == 0) {
             holder.likesCounter.text = ""
             holder.likesIcon.setImageResource(R.drawable.likes_none)
         } else {
-            holder.likesCounter.text = post.likes.toString()
+            holder.likesCounter.text = postUiModel.post.likes.toString()
             holder.likesIcon.setImageResource(R.drawable.likes_yes)
         }
 
-        if (post.comments == 0) {
+        if (postUiModel.post.comments == 0) {
             holder.commentsCounter.text = ""
             holder.commentsIcon.setImageResource(R.drawable.comments_none)
         } else {
-            holder.commentsCounter.text = post.comments.toString()
+            holder.commentsCounter.text = postUiModel.post.comments.toString()
             holder.commentsIcon.setImageResource(R.drawable.comments_yes)
         }
 
-        if (post.shares == 0) {
+        if (postUiModel.post.shares == 0) {
             holder.sharesCounter.text = ""
             holder.sharesIcon.setImageResource(R.drawable.shares_none)
         } else {
-            holder.sharesCounter.text = post.shares.toString()
+            holder.sharesCounter.text = postUiModel.post.shares.toString()
             holder.sharesIcon.setImageResource(R.drawable.shares_yes)
         }
     }
@@ -65,34 +64,4 @@ class PostAdapter(private val items : List<Post>, private val context: Context) 
         val sharesIcon: ImageView = view.sharesIcon
         val sharesCounter: TextView = view.sharesCounter
     }
-
-    private fun secondsToString(postDateInMillis: Long):String {
-        val milliseconds = LocalDateTime.now().toDate().time - postDateInMillis
-
-        val seconds = milliseconds / 1000
-        val minutes: Long = seconds / 60
-        val hours: Long = minutes / 60
-        val days: Long = hours / 24
-        val months: Long = days / 30
-        val years: Long = months / 12
-
-        val periodMap = mapOf(
-                Pair(0, years) to R.plurals.plurals_years,
-                Pair(1, months) to R.plurals.plurals_months,
-                Pair(2, days) to R.plurals.plurals_days,
-                Pair(3, hours) to R.plurals.plurals_hours,
-                Pair(4, minutes) to R.plurals.plurals_minutes
-        )
-
-        for ((k, v) in periodMap) {
-            if (k.second > 0) {
-                return context.resources.getQuantityString(
-                        v,
-                        k.second.toInt(),
-                        k.second.toInt())
-            }
-        }
-        return context.resources.getString(R.string.less_a_minute)
-    }
 }
-
