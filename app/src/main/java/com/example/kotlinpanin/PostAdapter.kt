@@ -26,30 +26,28 @@ class PostAdapter(private val items : List<PostUiModel>) : RecyclerView.Adapter<
         holder.name.text = postUiModel.post.posterName
         holder.text.text = postUiModel.post.text
 
-        // TODO эти все ветвления тоже можно заранее предусмотреть
-        if (postUiModel.post.likes == 0) {
-            holder.likesCounter.text = ""
-            holder.likesIcon.setImageResource(R.drawable.likes_none)
-        } else {
-            holder.likesCounter.text = postUiModel.post.likes.toString()
-            holder.likesIcon.setImageResource(R.drawable.likes_yes)
+        holder.likesCounter.text = postUiModel.likesCounterString
+        holder.likesIcon.setImageResource(postUiModel.likesIcon)
+        holder.likesIcon.setOnClickListener{
+            if (postUiModel.post.isLiked) {
+                postUiModel.post.isLiked = false
+                postUiModel.post.likes--
+                holder.likesIcon.setImageResource(R.drawable.likes_none)
+                holder.likesCounter.text = if (postUiModel.post.likes > 0) postUiModel.post.likes.toString() else ""
+
+            } else {
+                postUiModel.post.isLiked = true
+                postUiModel.post.likes++
+                holder.likesIcon.setImageResource(R.drawable.likes_yes)
+                holder.likesCounter.text = postUiModel.post.likes.toString()
+            }
         }
 
-        if (postUiModel.post.comments == 0) {
-            holder.commentsCounter.text = ""
-            holder.commentsIcon.setImageResource(R.drawable.comments_none)
-        } else {
-            holder.commentsCounter.text = postUiModel.post.comments.toString()
-            holder.commentsIcon.setImageResource(R.drawable.comments_yes)
-        }
+        holder.commentsCounter.text = postUiModel.commentsCounterString
+        holder.commentsIcon.setImageResource(postUiModel.commentsIcon)
 
-        if (postUiModel.post.shares == 0) {
-            holder.sharesCounter.text = ""
-            holder.sharesIcon.setImageResource(R.drawable.shares_none)
-        } else {
-            holder.sharesCounter.text = postUiModel.post.shares.toString()
-            holder.sharesIcon.setImageResource(R.drawable.shares_yes)
-        }
+        holder.sharesCounter.text = postUiModel.sharesCounterString
+        holder.sharesIcon.setImageResource(postUiModel.sharesIcon)
     }
 
     class ViewHolder (view: View) : RecyclerView.ViewHolder(view) {

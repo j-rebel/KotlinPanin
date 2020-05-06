@@ -3,7 +3,15 @@ package com.example.kotlinpanin
 import android.content.Context
 import org.joda.time.LocalDateTime
 
-data class PostUiModel(val post: Post, val dateFormatted: String)
+data class PostUiModel(val post: Post, val dateFormatted: String) {
+    val likesCounterString = if (post.likes > 0) "${post.likes}" else ""
+    val commentsCounterString = if (post.comments > 0) "${post.comments}" else ""
+    val sharesCounterString = if (post.shares > 0) "${post.shares}" else ""
+
+    val likesIcon = if(post.isLiked) R.drawable.likes_yes else R.drawable.likes_none
+    val commentsIcon = if(post.isCommented) R.drawable.comments_yes else R.drawable.comments_none
+    val sharesIcon = if(post.isShared) R.drawable.shares_yes else R.drawable.shares_none
+}
 
 fun Post.toUiModel(): PostUiModel = PostUiModel(this, secondsToString(this.date.toDate().time, App.applicationContext()))
 
