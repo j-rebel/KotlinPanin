@@ -13,6 +13,7 @@ import android.widget.TextView
 import androidx.core.content.ContextCompat.startActivity
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
+import com.bumptech.glide.load.resource.bitmap.RoundedCorners
 import com.google.android.youtube.player.YouTubeInitializationResult
 import com.google.android.youtube.player.YouTubePlayer
 import com.google.android.youtube.player.YouTubePlayerView
@@ -33,6 +34,7 @@ class PostAdapter(private val items: List<PostUiModel>, private val context: Con
 
         Glide.with(context)
                 .load(postUiModel.post.posterAvatar)
+                .transform(RoundedCorners(150))
                 .into(holder.avatar)
 
         holder.date.text = postUiModel.dateFormatted
