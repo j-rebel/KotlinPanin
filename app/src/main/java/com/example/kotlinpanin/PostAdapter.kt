@@ -8,6 +8,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.FrameLayout
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.core.content.ContextCompat.startActivity
@@ -19,7 +20,7 @@ import com.google.android.youtube.player.YouTubePlayerView
 import com.google.api.client.googleapis.javanet.GoogleNetHttpTransport
 import kotlinx.android.synthetic.main.post.view.*
 
-class PostAdapter(private val items : List<PostUiModel>, private val context: Context) : RecyclerView.Adapter<PostAdapter.ViewHolder>() {
+class PostAdapter(private val items: List<PostUiModel>, private val context: Context) : RecyclerView.Adapter<PostAdapter.ViewHolder>() {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         return ViewHolder(LayoutInflater.from(parent.context).inflate(R.layout.post, parent, false))
@@ -35,49 +36,65 @@ class PostAdapter(private val items : List<PostUiModel>, private val context: Co
         Glide.with(context)
                 .load(postUiModel.post.posterAvatar)
                 .into(holder.avatar)
+
         holder.date.text = postUiModel.dateFormatted
         holder.name.text = postUiModel.post.posterName
+        holder.text.text = postUiModel.post.text
 
-        Glide.with(context)
-                .load("https://img.youtube.com/vi/yNLtreZkkL0/0.jpg")
-                .into(holder.preview)
-        Glide.with(context)
-                .load(R.drawable.play)
-                .into(holder.playBtn)
-        holder.playBtn.setOnClickListener{
-            holder.preview.visibility = View.GONE
-            holder.playBtn.visibility = View.GONE
-            holder.youtubePlayerView.initialize("AIzaSyDSdq4pV4D-OpQi9bK1ngfE3sQoLZftkCU",
-                    object : YouTubePlayer.OnInitializedListener {
-                        override fun onInitializationSuccess(provider: YouTubePlayer.Provider,
-                                                             youTubePlayer: YouTubePlayer, b: Boolean) {
-                            youTubePlayer.cueVideo("yNLtreZkkL0")
-                        }
+        if (postUiModel.post.type == PostType.VIDEO) {
+            holder.youtubeLayout.visibility = View.VISIBLE
+            Glide.with(context)
+                    .load("https://img.youtube.com/vi/" + postUiModel.post.video + "/0.jpg")
+                    .into(holder.preview)
+            Glide.with(context)
+                    .load(R.drawable.play)
+                    .into(holder.playBtn)
+            holder.playBtn.setOnClickListener {
+                holder.preview.visibility = View.GONE
+                holder.playBtn.visibility = View.GONE
+                holder.youtubePlayerView.initialize("AIzaSyDSdq4pV4D-OpQi9bK1ngfE3sQoLZftkCU",
+                        object : YouTubePlayer.OnInitializedListener {
+                            override fun onInitializationSuccess(provider: YouTubePlayer.Provider,
+                                                                 youTubePlayer: YouTubePlayer, b: Boolean) {
+                                youTubePlayer.cueVideo(postUiModel.post.video)
+                            }
 
-                        override fun onInitializationFailure(provider: YouTubePlayer.Provider,
-                                                             youTubeInitializationResult: YouTubeInitializationResult) {
-                        }
-                    })
+                            override fun onInitializationFailure(provider: YouTubePlayer.Provider,
+                                                                 youTubeInitializationResult: YouTubeInitializationResult) {
+                            }
+                        })
+            }
         }
 
-        holder.text.text = postUiModel.post.text
-        holder.address.text = postUiModel.post.address
-        Glide.with(context)
-                .load(R.drawable.location)
-                .into(holder.geoIcon)
-        holder.geoIcon.setOnClickListener{
-            val intent = Intent().apply {
-                action = Intent.ACTION_VIEW
-                data = Uri.parse("geo:${postUiModel.post.geo.first},${postUiModel.post.geo.second}")
+        if (postUiModel.post.type == PostType.EVENT) {
+            holder.geoIcon.visibility = View.VISIBLE
+            holder.address.visibility = View.VISIBLE
+            holder.address.text = postUiModel.post.address
+            Glide.with(context)
+                    .load(R.drawable.location)
+                    .into(holder.geoIcon)
+            holder.geoIcon.setOnClickListener {
+                val intent = Intent().apply {
+                    action = Intent.ACTION_VIEW
+                    data = Uri.parse("geo:${postUiModel.post.geo?.first},${postUiModel.post.geo?.second}")
+                }
+                startActivity(context, intent, Bundle.EMPTY)
             }
-            startActivity(context, intent, Bundle.EMPTY)
+        }
+
+        if (postUiModel.post.type == PostType.AD) {
+            holder.adText.visibility = View.VISIBLE
+        }
+
+        if (postUiModel.post.type == PostType.REPOST) {
+
         }
 
         holder.likesCounter.text = postUiModel.likesCounterString
         Glide.with(context)
                 .load(postUiModel.likesIcon)
                 .into(holder.likesIcon)
-        holder.likesIcon.setOnClickListener{
+        holder.likesIcon.setOnClickListener {
             if (postUiModel.post.isLiked) {
                 postUiModel.post.isLiked = false
                 postUiModel.post.likes--
@@ -103,16 +120,18 @@ class PostAdapter(private val items : List<PostUiModel>, private val context: Co
         holder.sharesIcon.setImageResource(postUiModel.sharesIcon)
     }
 
-    class ViewHolder (view: View) : RecyclerView.ViewHolder(view) {
+    class ViewHolder(view: View) : RecyclerView.ViewHolder(view) {
         val avatar: ImageView = view.avatar
         val name: TextView = view.userName
         val date: TextView = view.date
+        val youtubeLayout: FrameLayout = view.youtubeLayout
         val youtubePlayerView: YouTubePlayerView = view.youtubePlayerView
         val preview: ImageView = view.preview
         val playBtn: ImageView = view.playBtn
         val text: TextView = view.text
         val address: TextView = view.address
         val geoIcon: ImageView = view.geoIcon
+        val adText: TextView = view.adText
         val likesIcon: ImageView = view.likesIcon
         val likesCounter: TextView = view.likesCounter
         val commentsIcon: ImageView = view.commentsIcon

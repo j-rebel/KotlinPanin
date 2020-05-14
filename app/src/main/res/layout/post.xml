@@ -43,14 +43,68 @@
             app:layout_constraintTop_toBottomOf="@id/date"
             tool:text="Test User" />
 
+        <TextView
+            android:id="@+id/text"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:textColor="@color/colorBlack"
+            android:textSize="18sp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/youtubeLayout"
+            tool:text="@string/ipsum_string" />
+
+        <ImageView
+            android:id="@+id/geoIcon"
+            android:layout_width="24dp"
+            android:layout_height="24dp"
+            android:layout_marginStart="8dp"
+            android:layout_marginTop="8dp"
+            android:layout_weight="1"
+            android:contentDescription="@string/app_name"
+            android:visibility="gone"
+            app:layout_constraintStart_toEndOf="@+id/avatar"
+            app:layout_constraintTop_toBottomOf="@+id/userName"
+            app:srcCompat="@drawable/location"
+            tool:srcCompat="@drawable/location"
+            tool:visibility="visible" />
+
+        <TextView
+            android:id="@+id/address"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
+            android:layout_marginTop="8dp"
+            android:visibility="gone"
+            app:layout_constraintStart_toEndOf="@+id/geoIcon"
+            app:layout_constraintTop_toBottomOf="@+id/userName"
+            tool:text="город Москва"
+            tool:visibility="visible" />
+
+        <TextView
+            android:id="@+id/adText"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
+            android:layout_marginTop="8dp"
+            android:text="@string/ad_text"
+            android:visibility="gone"
+            app:layout_constraintStart_toEndOf="@+id/address"
+            app:layout_constraintTop_toBottomOf="@+id/userName"
+            tool:visibility="visible" />
+
         <FrameLayout
             android:id="@+id/youtubeLayout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="16dp"
             android:orientation="vertical"
+            android:visibility="gone"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/avatar"
-            tool:layout_editor_absoluteX="16dp">
+            tool:visibility="visible">
 
             <com.google.android.youtube.player.YouTubePlayerView
                 android:id="@+id/youtubePlayerView"
@@ -74,31 +128,6 @@
                 app:srcCompat="@drawable/play" />
 
         </FrameLayout>
-
-        <TextView
-            android:id="@+id/text"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="16dp"
-            android:textColor="@color/colorBlack"
-            android:textSize="18sp"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/youtubeLayout"
-            tool:text="@string/ipsum_string" />
-
-        <ImageView
-            android:id="@+id/geoIcon"
-            android:layout_width="24dp"
-            android:layout_height="24dp"
-            android:layout_marginStart="8dp"
-            android:layout_marginTop="8dp"
-            android:layout_weight="1"
-            android:contentDescription="@string/app_name"
-            app:layout_constraintStart_toEndOf="@+id/avatar"
-            app:layout_constraintTop_toBottomOf="@+id/userName"
-            app:srcCompat="@drawable/location"
-            tool:srcCompat="@drawable/location" />
 
         <LinearLayout
             android:layout_width="wrap_content"
@@ -168,16 +197,6 @@
                 tool:text="7" />
 
         </LinearLayout>
-
-        <TextView
-            android:id="@+id/address"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="8dp"
-            android:layout_marginTop="8dp"
-            app:layout_constraintStart_toEndOf="@+id/geoIcon"
-            app:layout_constraintTop_toBottomOf="@+id/userName"
-            tool:text="город Москва" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 

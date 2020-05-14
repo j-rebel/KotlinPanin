@@ -48,4 +48,6 @@
         <item quantity="many">%1$d years ago</item>
         <item quantity="other">%1$d years ago</item>
     </plurals>
+
+    <string name="ad_text">Рекламная запись</string>>
 </resources>
