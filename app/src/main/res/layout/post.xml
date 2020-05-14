@@ -13,19 +13,20 @@
 
         <ImageView
             android:id="@+id/avatar"
-            android:layout_width="75dp"
-            android:layout_height="75dp"
-            android:layout_marginTop="8dp"
+            android:layout_width="120dp"
+            android:layout_height="120dp"
+            android:adjustViewBounds="true"
             android:contentDescription="@string/app_name"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            tool:srcCompat="@mipmap/ic_launcher" />
+            tool:srcCompat="@mipmap/test_img_five" />
 
         <TextView
             android:id="@+id/date"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="8dp"
+            android:layout_marginTop="16dp"
             app:layout_constraintStart_toEndOf="@id/avatar"
             app:layout_constraintTop_toTopOf="parent"
             tool:text="20 августа 2016" />
@@ -42,18 +43,6 @@
             app:layout_constraintStart_toEndOf="@id/avatar"
             app:layout_constraintTop_toBottomOf="@id/date"
             tool:text="Test User" />
-
-        <TextView
-            android:id="@+id/text"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="16dp"
-            android:textColor="@color/colorBlack"
-            android:textSize="18sp"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/youtubeLayout"
-            tool:text="@string/ipsum_string" />
 
         <ImageView
             android:id="@+id/geoIcon"
@@ -128,6 +117,18 @@
                 app:srcCompat="@drawable/play" />
 
         </FrameLayout>
+
+        <TextView
+            android:id="@+id/text"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:textColor="@color/colorBlack"
+            android:textSize="18sp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/youtubeLayout"
+            tool:text="@string/ipsum_string" />
 
         <LinearLayout
             android:layout_width="wrap_content"
