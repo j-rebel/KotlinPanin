@@ -43,4 +43,7 @@
         <item quantity="many">%1$d лет назад</item>
         <item quantity="other">%1$d лет назад</item>
     </plurals>
+
+    <string name="ad_text">Рекламная запись</string>
+    <string name="repost_from">Репост записи пользователя %1$s, опубликованной %2$s</string>
 </resources>

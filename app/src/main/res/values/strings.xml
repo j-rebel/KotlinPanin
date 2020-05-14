@@ -49,5 +49,6 @@
         <item quantity="other">%1$d years ago</item>
     </plurals>
 
-    <string name="ad_text">Рекламная запись</string>>
+    <string name="ad_text">AD</string>
+    <string name="repost_from">>Repost from %1$s, posted %2$s</string>
 </resources>

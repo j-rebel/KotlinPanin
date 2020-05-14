@@ -37,6 +37,18 @@ class PostAdapter(private val items: List<PostUiModel>, private val context: Con
 
         holder.date.text = postUiModel.dateFormatted
         holder.name.text = postUiModel.post.posterName
+
+        if (postUiModel.post.type == PostType.REPOST) {
+            holder.repostComment.visibility = View.VISIBLE
+            holder.repostInfo.visibility = View.VISIBLE
+            holder.repostLine.visibility = View.VISIBLE
+
+            holder.repostInfo.text = context.getString(R.string.repost_from, postUiModel.post.repost?.posterName, postUiModel.post.repost?.toUiModel()?.dateFormatted)
+            holder.repostComment.text = postUiModel.post.text
+
+            postUiModel.post = postUiModel.post.repost!!
+        }
+
         holder.text.text = postUiModel.post.text
 
         if (postUiModel.post.type == PostType.VIDEO) {
@@ -84,10 +96,6 @@ class PostAdapter(private val items: List<PostUiModel>, private val context: Con
             holder.adText.visibility = View.VISIBLE
         }
 
-        if (postUiModel.post.type == PostType.REPOST) {
-
-        }
-
         holder.likesCounter.text = postUiModel.likesCounterString
         Glide.with(context)
                 .load(postUiModel.likesIcon)
@@ -122,6 +130,9 @@ class PostAdapter(private val items: List<PostUiModel>, private val context: Con
         val avatar: ImageView = view.avatar
         val name: TextView = view.userName
         val date: TextView = view.date
+        val repostComment: TextView = view.repostComment
+        val repostInfo: TextView = view.repostInfo
+        val repostLine: TextView = view.repostLine
         val youtubeLayout: FrameLayout = view.youtubeLayout
         val youtubePlayerView: YouTubePlayerView = view.youtubePlayerView
         val preview: ImageView = view.preview
