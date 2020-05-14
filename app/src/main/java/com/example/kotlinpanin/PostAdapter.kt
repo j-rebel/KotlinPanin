@@ -7,6 +7,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Button
 import android.widget.FrameLayout
 import android.widget.ImageView
 import android.widget.TextView
@@ -19,7 +20,7 @@ import com.google.android.youtube.player.YouTubePlayer
 import com.google.android.youtube.player.YouTubePlayerView
 import kotlinx.android.synthetic.main.post.view.*
 
-class PostAdapter(private val items: List<PostUiModel>, private val context: Context) : RecyclerView.Adapter<PostAdapter.ViewHolder>() {
+class PostAdapter(private var items: List<PostUiModel>, private val context: Context) : RecyclerView.Adapter<PostAdapter.ViewHolder>() {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         return ViewHolder(LayoutInflater.from(parent.context).inflate(R.layout.post, parent, false))
@@ -27,6 +28,11 @@ class PostAdapter(private val items: List<PostUiModel>, private val context: Con
 
     override fun getItemCount(): Int {
         return items.size
+    }
+
+    fun hidePost(position: Int): Unit {
+        items = items - items[position]
+        notifyDataSetChanged()
     }
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
@@ -126,12 +132,17 @@ class PostAdapter(private val items: List<PostUiModel>, private val context: Con
 
         holder.sharesCounter.text = postUiModel.sharesCounterString
         holder.sharesIcon.setImageResource(postUiModel.sharesIcon)
+
+        holder.hideBtn.setOnClickListener(View.OnClickListener {
+            hidePost(position)
+        })
     }
 
     class ViewHolder(view: View) : RecyclerView.ViewHolder(view) {
         val avatar: ImageView = view.avatar
         val name: TextView = view.userName
         val date: TextView = view.date
+        val hideBtn: Button = view.hideBtn
         val repostComment: TextView = view.repostComment
         val repostInfo: TextView = view.repostInfo
         val repostLine: TextView = view.repostLine

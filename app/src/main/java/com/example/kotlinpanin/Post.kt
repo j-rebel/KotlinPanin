@@ -2,7 +2,8 @@ package com.example.kotlinpanin
 
 import org.joda.time.LocalDateTime
 
-data class Post(val posterName: String,
+data class Post(val id: Long,
+                val posterName: String,
                 val posterAvatar: Int,
                 val date: LocalDateTime,
                 val type: PostType,
