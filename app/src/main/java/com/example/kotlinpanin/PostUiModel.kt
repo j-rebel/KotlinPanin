@@ -3,7 +3,7 @@ package com.example.kotlinpanin
 import android.content.Context
 import org.joda.time.LocalDateTime
 
-data class PostUiModel(var post: Post, val dateFormatted: String) {
+data class PostUiModel(val post: Post, val dateFormatted: String) {
     val likesCounterString = if (post.likes > 0) "${post.likes}" else ""
     val commentsCounterString = if (post.comments > 0) "${post.comments}" else ""
     val sharesCounterString = if (post.shares > 0) "${post.shares}" else ""

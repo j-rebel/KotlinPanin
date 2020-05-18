@@ -12,6 +12,7 @@ import android.widget.FrameLayout
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.core.content.ContextCompat.startActivity
+import androidx.core.view.isVisible
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.resource.bitmap.RoundedCorners
@@ -23,16 +24,44 @@ import kotlinx.android.synthetic.main.post.view.*
 class PostAdapter(private var items: List<PostUiModel>, private val context: Context) : RecyclerView.Adapter<PostAdapter.ViewHolder>() {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
-        return ViewHolder(LayoutInflater.from(parent.context).inflate(R.layout.post, parent, false))
+        return ViewHolder(LayoutInflater.from(parent.context).inflate(R.layout.post, parent, false)).apply {
+            hideBtn.setOnClickListener {
+                hidePost(adapterPosition)
+            }
+
+            likesIcon.setOnClickListener {
+                val postUiModel = items[adapterPosition]
+                if (postUiModel.post.isLiked) {
+                    items = items.toMutableList().apply {
+                        set(adapterPosition, postUiModel.copy(
+                                post = postUiModel.post.copy(isLiked = false, likes = postUiModel.post.likes.dec()))
+                        )
+                    }
+                    Glide.with(context)
+                            .load(R.drawable.likes_none)
+                            .into(likesIcon)
+                    likesCounter.text = if (postUiModel.post.likes > 0) postUiModel.post.likes.toString() else ""
+
+                } else {
+                    items = items.toMutableList().apply {
+                        set(adapterPosition, postUiModel.copy(
+                                post = postUiModel.post.copy(isLiked = true, likes = postUiModel.post.likes.inc()))
+                        )
+                    }
+                    Glide.with(context)
+                            .load(R.drawable.likes_yes)
+                            .into(likesIcon)
+                    likesCounter.text = postUiModel.post.likes.toString()
+                }
+            }
+        }
     }
 
-    override fun getItemCount(): Int {
-        return items.size
-    }
+    override fun getItemCount(): Int = items.size
 
-    fun hidePost(position: Int): Unit {
+    private fun hidePost(position: Int) {
         items = items - items[position]
-        notifyDataSetChanged()
+        notifyItemRemoved(position)
     }
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
@@ -46,96 +75,107 @@ class PostAdapter(private var items: List<PostUiModel>, private val context: Con
         holder.date.text = postUiModel.dateFormatted
         holder.name.text = postUiModel.post.posterName
 
-        if (postUiModel.post.type == PostType.REPOST) {
-            holder.repostComment.visibility = View.VISIBLE
-            holder.repostInfo.visibility = View.VISIBLE
-            holder.repostLine.visibility = View.VISIBLE
+        when (postUiModel.post.type) {
+            PostType.TEXT   -> {
+                holder.repostComment.isVisible = false
+                holder.repostInfo.isVisible = false
+                holder.repostLine.isVisible = false
+                holder.geoIcon.isVisible = false
+                holder.address.isVisible = false
+                holder.youtubeLayout.isVisible = false
+                holder.adText.isVisible = false
+            }
 
-            holder.repostInfo.text = context.getString(R.string.repost_from, postUiModel.post.repost?.posterName, postUiModel.post.repost?.toUiModel()?.dateFormatted)
-            holder.repostComment.text = postUiModel.post.text
+            PostType.REPOST -> {
+                holder.repostComment.isVisible = true
+                holder.repostInfo.isVisible = true
+                holder.repostLine.isVisible = true
+                holder.geoIcon.isVisible = false
+                holder.address.isVisible = false
+                holder.youtubeLayout.isVisible = false
+                holder.adText.isVisible = false
 
-            postUiModel.post = postUiModel.post.repost!!
+                holder.repostInfo.text = context.getString(R.string.repost_from, postUiModel.post.repost?.posterName,
+                        postUiModel.post.repost?.toUiModel()?.dateFormatted)
+                holder.repostComment.text = postUiModel.post.text
+            }
+
+            PostType.EVENT  -> {
+                holder.geoIcon.isVisible = true
+                holder.address.isVisible = true
+                holder.repostComment.isVisible = false
+                holder.repostInfo.isVisible = false
+                holder.repostLine.isVisible = false
+                holder.youtubeLayout.isVisible = false
+                holder.adText.isVisible = false
+
+                holder.address.text = postUiModel.post.address
+                Glide.with(context)
+                        .load(R.drawable.location)
+                        .into(holder.geoIcon)
+                holder.geoIcon.setOnClickListener {
+                    val intent = Intent().apply {
+                        action = Intent.ACTION_VIEW
+                        data = Uri.parse("geo:${postUiModel.post.geo?.first},${postUiModel.post.geo?.second}")
+                    }
+                    startActivity(context, intent, Bundle.EMPTY)
+                }
+            }
+
+            PostType.VIDEO  -> {
+                holder.youtubeLayout.isVisible = true
+                holder.geoIcon.isVisible = false
+                holder.address.isVisible = false
+                holder.repostComment.isVisible = false
+                holder.repostInfo.isVisible = false
+                holder.repostLine.isVisible = false
+                holder.adText.isVisible = false
+
+                Glide.with(context)
+                        .load("https://img.youtube.com/vi/" + postUiModel.post.video + "/0.jpg")
+                        .into(holder.preview)
+                Glide.with(context)
+                        .load(R.drawable.play)
+                        .into(holder.playBtn)
+                holder.playBtn.setOnClickListener {
+                    holder.preview.isVisible = false
+                    holder.playBtn.isVisible = false
+                    holder.youtubePlayerView.initialize("AIzaSyDSdq4pV4D-OpQi9bK1ngfE3sQoLZftkCU",
+                            object : YouTubePlayer.OnInitializedListener {
+                                override fun onInitializationSuccess(provider: YouTubePlayer.Provider,
+                                                                     youTubePlayer: YouTubePlayer, b: Boolean) {
+                                    youTubePlayer.cueVideo(postUiModel.post.video)
+                                }
+
+                                override fun onInitializationFailure(provider: YouTubePlayer.Provider,
+                                                                     youTubeInitializationResult: YouTubeInitializationResult) = Unit
+                            })
+                }
+            }
+
+            PostType.AD     -> {
+                holder.adText.isVisible = true
+                holder.youtubeLayout.isVisible = false
+                holder.geoIcon.isVisible = false
+                holder.address.isVisible = false
+                holder.repostComment.isVisible = false
+                holder.repostInfo.isVisible = false
+                holder.repostLine.isVisible = false
+            }
         }
 
         holder.text.text = postUiModel.post.text
-
-        if (postUiModel.post.type == PostType.VIDEO) {
-            holder.youtubeLayout.visibility = View.VISIBLE
-            Glide.with(context)
-                    .load("https://img.youtube.com/vi/" + postUiModel.post.video + "/0.jpg")
-                    .into(holder.preview)
-            Glide.with(context)
-                    .load(R.drawable.play)
-                    .into(holder.playBtn)
-            holder.playBtn.setOnClickListener {
-                holder.preview.visibility = View.GONE
-                holder.playBtn.visibility = View.GONE
-                holder.youtubePlayerView.initialize("AIzaSyDSdq4pV4D-OpQi9bK1ngfE3sQoLZftkCU",
-                        object : YouTubePlayer.OnInitializedListener {
-                            override fun onInitializationSuccess(provider: YouTubePlayer.Provider,
-                                                                 youTubePlayer: YouTubePlayer, b: Boolean) {
-                                youTubePlayer.cueVideo(postUiModel.post.video)
-                            }
-
-                            override fun onInitializationFailure(provider: YouTubePlayer.Provider,
-                                                                 youTubeInitializationResult: YouTubeInitializationResult) {
-                            }
-                        })
-            }
-        }
-
-        if (postUiModel.post.type == PostType.EVENT) {
-            holder.geoIcon.visibility = View.VISIBLE
-            holder.address.visibility = View.VISIBLE
-            holder.address.text = postUiModel.post.address
-            Glide.with(context)
-                    .load(R.drawable.location)
-                    .into(holder.geoIcon)
-            holder.geoIcon.setOnClickListener {
-                val intent = Intent().apply {
-                    action = Intent.ACTION_VIEW
-                    data = Uri.parse("geo:${postUiModel.post.geo?.first},${postUiModel.post.geo?.second}")
-                }
-                startActivity(context, intent, Bundle.EMPTY)
-            }
-        }
-
-        if (postUiModel.post.type == PostType.AD) {
-            holder.adText.visibility = View.VISIBLE
-        }
 
         holder.likesCounter.text = postUiModel.likesCounterString
         Glide.with(context)
                 .load(postUiModel.likesIcon)
                 .into(holder.likesIcon)
-        holder.likesIcon.setOnClickListener {
-            if (postUiModel.post.isLiked) {
-                postUiModel.post.isLiked = false
-                postUiModel.post.likes--
-                Glide.with(context)
-                        .load(R.drawable.likes_none)
-                        .into(holder.likesIcon)
-                holder.likesCounter.text = if (postUiModel.post.likes > 0) postUiModel.post.likes.toString() else ""
-
-            } else {
-                postUiModel.post.isLiked = true
-                postUiModel.post.likes++
-                Glide.with(context)
-                        .load(R.drawable.likes_yes)
-                        .into(holder.likesIcon)
-                holder.likesCounter.text = postUiModel.post.likes.toString()
-            }
-        }
 
         holder.commentsCounter.text = postUiModel.commentsCounterString
         holder.commentsIcon.setImageResource(postUiModel.commentsIcon)
 
         holder.sharesCounter.text = postUiModel.sharesCounterString
         holder.sharesIcon.setImageResource(postUiModel.sharesIcon)
-
-        holder.hideBtn.setOnClickListener(View.OnClickListener {
-            hidePost(position)
-        })
     }
 
     class ViewHolder(view: View) : RecyclerView.ViewHolder(view) {
