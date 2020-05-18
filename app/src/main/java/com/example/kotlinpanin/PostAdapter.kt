@@ -160,7 +160,7 @@ class PostAdapter(private var items: List<PostUiModel>, private val context: Con
                         holder.repostedPlayBtn.setOnClickListener {
                             holder.repostedPreview.isVisible = false
                             holder.repostedPlayBtn.isVisible = false
-                            holder.repostedYoutubePlayerView.initialize("AIzaSyDSdq4pV4D-OpQi9bK1ngfE3sQoLZftkCU",
+                            holder.repostedYoutubePlayerView.initialize(context.getString(R.string.key_one + R.string.key_two + R.string.key_three),
                                     object : YouTubePlayer.OnInitializedListener {
                                         override fun onInitializationSuccess(provider: YouTubePlayer.Provider,
                                                                              youTubePlayer: YouTubePlayer, b: Boolean) {

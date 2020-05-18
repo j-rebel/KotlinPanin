@@ -9,6 +9,10 @@
 
     <string name="less_a_minute">Менее минуты назад</string>
 
+    <string name="key_one">AIzaSyDSdq4</string>
+    <string name="key_two">pV4D-OpQi</string>
+    <string name="key_three">9bK1ngfE3sQoLZftkCU</string>
+
     <plurals name="plurals_minutes">
         <item quantity="one">%1$d минуту назад</item>
         <item quantity="few">%1$d минуты назад</item>
