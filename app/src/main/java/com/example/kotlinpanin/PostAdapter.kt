@@ -7,10 +7,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Button
-import android.widget.FrameLayout
-import android.widget.ImageView
-import android.widget.TextView
+import android.widget.*
 import androidx.core.content.ContextCompat.startActivity
 import androidx.core.view.isVisible
 import androidx.recyclerview.widget.RecyclerView
@@ -20,11 +17,32 @@ import com.google.android.youtube.player.YouTubeInitializationResult
 import com.google.android.youtube.player.YouTubePlayer
 import com.google.android.youtube.player.YouTubePlayerView
 import kotlinx.android.synthetic.main.post.view.*
+import kotlinx.android.synthetic.main.post.view.adText
+import kotlinx.android.synthetic.main.post.view.address
+import kotlinx.android.synthetic.main.post.view.avatar
+import kotlinx.android.synthetic.main.post.view.commentsCounter
+import kotlinx.android.synthetic.main.post.view.commentsIcon
+import kotlinx.android.synthetic.main.post.view.date
+import kotlinx.android.synthetic.main.post.view.geoIcon
+import kotlinx.android.synthetic.main.post.view.hideBtn
+import kotlinx.android.synthetic.main.post.view.likesCounter
+import kotlinx.android.synthetic.main.post.view.likesIcon
+import kotlinx.android.synthetic.main.post.view.playBtn
+import kotlinx.android.synthetic.main.post.view.preview
+import kotlinx.android.synthetic.main.post.view.repostInfo
+import kotlinx.android.synthetic.main.post.view.repostLine
+import kotlinx.android.synthetic.main.post.view.sharesCounter
+import kotlinx.android.synthetic.main.post.view.sharesIcon
+import kotlinx.android.synthetic.main.post.view.text
+import kotlinx.android.synthetic.main.post.view.userName
+import kotlinx.android.synthetic.main.post.view.youtubeLayout
+import kotlinx.android.synthetic.main.post.view.youtubePlayerView
+import kotlinx.android.synthetic.main.post_test.view.*
 
 class PostAdapter(private var items: List<PostUiModel>, private val context: Context) : RecyclerView.Adapter<PostAdapter.ViewHolder>() {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
-        return ViewHolder(LayoutInflater.from(parent.context).inflate(R.layout.post, parent, false)).apply {
+        return ViewHolder(LayoutInflater.from(parent.context).inflate(R.layout.post_test, parent, false)).apply {
             hideBtn.setOnClickListener {
                 hidePost(adapterPosition)
             }
@@ -77,9 +95,8 @@ class PostAdapter(private var items: List<PostUiModel>, private val context: Con
 
         when (postUiModel.post.type) {
             PostType.TEXT   -> {
-                holder.repostComment.isVisible = false
                 holder.repostInfo.isVisible = false
-                holder.repostLine.isVisible = false
+                holder.repostedMainContent.isVisible = false
                 holder.geoIcon.isVisible = false
                 holder.address.isVisible = false
                 holder.youtubeLayout.isVisible = false
@@ -87,9 +104,8 @@ class PostAdapter(private var items: List<PostUiModel>, private val context: Con
             }
 
             PostType.REPOST -> {
-                holder.repostComment.isVisible = true
                 holder.repostInfo.isVisible = true
-                holder.repostLine.isVisible = true
+                holder.repostedMainContent.isVisible = true
                 holder.geoIcon.isVisible = false
                 holder.address.isVisible = false
                 holder.youtubeLayout.isVisible = false
@@ -97,15 +113,83 @@ class PostAdapter(private var items: List<PostUiModel>, private val context: Con
 
                 holder.repostInfo.text = context.getString(R.string.repost_from, postUiModel.post.repost?.posterName,
                         postUiModel.post.repost?.toUiModel()?.dateFormatted)
-                holder.repostComment.text = postUiModel.post.text
+                Glide.with(context)
+                        .load(postUiModel.post.repost?.posterAvatar)
+                        .transform(RoundedCorners(150))
+                        .into(holder.repostedAvatar)
+
+                holder.repostedDate.text = postUiModel.post.repost?.toUiModel()?.dateFormatted
+                holder.repostedName.text = postUiModel.post.repost?.posterName
+
+                when (postUiModel.post.repost?.type) {
+                    PostType.TEXT   -> {
+                        holder.repostedGeoIcon.isVisible = false
+                        holder.repostedAddress.isVisible = false
+                        holder.repostedYoutubeLayout.isVisible = false
+                        holder.repostedAdText.isVisible = false
+                    }
+                    PostType.EVENT  -> {
+                        holder.repostedGeoIcon.isVisible = true
+                        holder.repostedAddress.isVisible = true
+                        holder.repostedYoutubeLayout.isVisible = false
+                        holder.repostedAdText.isVisible = false
+
+                        holder.repostedAddress.text = postUiModel.post.repost?.address
+                        Glide.with(context)
+                                .load(R.drawable.location)
+                                .into(holder.repostedGeoIcon)
+                        holder.repostedGeoIcon.setOnClickListener {
+                            val intent = Intent().apply {
+                                action = Intent.ACTION_VIEW
+                                data = Uri.parse("geo:${postUiModel.post.repost?.geo?.first},${postUiModel.post.repost?.geo?.second}")
+                            }
+                            startActivity(context, intent, Bundle.EMPTY)
+                        }
+                    }
+                    PostType.VIDEO  -> {
+                        holder.repostedYoutubeLayout.isVisible = true
+                        holder.repostedGeoIcon.isVisible = false
+                        holder.repostedAddress.isVisible = false
+                        holder.repostedAdText.isVisible = false
+
+                        Glide.with(context)
+                                .load("https://img.youtube.com/vi/" + postUiModel.post.repost?.video + "/0.jpg")
+                                .into(holder.repostedPreview)
+                        Glide.with(context)
+                                .load(R.drawable.play)
+                                .into(holder.repostedPlayBtn)
+                        holder.repostedPlayBtn.setOnClickListener {
+                            holder.repostedPreview.isVisible = false
+                            holder.repostedPlayBtn.isVisible = false
+                            holder.repostedYoutubePlayerView.initialize("AIzaSyDSdq4pV4D-OpQi9bK1ngfE3sQoLZftkCU",
+                                    object : YouTubePlayer.OnInitializedListener {
+                                        override fun onInitializationSuccess(provider: YouTubePlayer.Provider,
+                                                                             youTubePlayer: YouTubePlayer, b: Boolean) {
+                                            youTubePlayer.cueVideo(postUiModel.post.repost?.video)
+                                        }
+
+                                        override fun onInitializationFailure(provider: YouTubePlayer.Provider,
+                                                                             youTubeInitializationResult: YouTubeInitializationResult) = Unit
+                                    })
+                        }
+                    }
+                    PostType.AD     -> {
+                        holder.repostedAdText.isVisible = true
+                        holder.repostedYoutubeLayout.isVisible = false
+                        holder.repostedGeoIcon.isVisible = false
+                        holder.repostedAddress.isVisible = false
+                        }
+                }
+
+                holder.repostedText.text = postUiModel.post.repost?.text
+
             }
 
             PostType.EVENT  -> {
                 holder.geoIcon.isVisible = true
                 holder.address.isVisible = true
-                holder.repostComment.isVisible = false
                 holder.repostInfo.isVisible = false
-                holder.repostLine.isVisible = false
+                holder.repostedMainContent.isVisible = false
                 holder.youtubeLayout.isVisible = false
                 holder.adText.isVisible = false
 
@@ -126,9 +210,8 @@ class PostAdapter(private var items: List<PostUiModel>, private val context: Con
                 holder.youtubeLayout.isVisible = true
                 holder.geoIcon.isVisible = false
                 holder.address.isVisible = false
-                holder.repostComment.isVisible = false
                 holder.repostInfo.isVisible = false
-                holder.repostLine.isVisible = false
+                holder.repostedMainContent.isVisible = false
                 holder.adText.isVisible = false
 
                 Glide.with(context)
@@ -158,9 +241,8 @@ class PostAdapter(private var items: List<PostUiModel>, private val context: Con
                 holder.youtubeLayout.isVisible = false
                 holder.geoIcon.isVisible = false
                 holder.address.isVisible = false
-                holder.repostComment.isVisible = false
+                holder.repostedMainContent.isVisible = false
                 holder.repostInfo.isVisible = false
-                holder.repostLine.isVisible = false
             }
         }
 
@@ -183,9 +265,6 @@ class PostAdapter(private var items: List<PostUiModel>, private val context: Con
         val name: TextView = view.userName
         val date: TextView = view.date
         val hideBtn: Button = view.hideBtn
-        val repostComment: TextView = view.repostComment
-        val repostInfo: TextView = view.repostInfo
-        val repostLine: TextView = view.repostLine
         val youtubeLayout: FrameLayout = view.youtubeLayout
         val youtubePlayerView: YouTubePlayerView = view.youtubePlayerView
         val preview: ImageView = view.preview
@@ -200,5 +279,25 @@ class PostAdapter(private var items: List<PostUiModel>, private val context: Con
         val commentsCounter: TextView = view.commentsCounter
         val sharesIcon: ImageView = view.sharesIcon
         val sharesCounter: TextView = view.sharesCounter
+        val repostInfo: TextView = view.repostInfo
+        val repostedMainContent: LinearLayout = view.repostedMainContent
+        val repostedAvatar: ImageView = view.repostedAvatar
+        val repostedName: TextView = view.repostedUserName
+        val repostedDate: TextView = view.repostedDate
+        val repostedYoutubeLayout: FrameLayout = view.repostedYoutubeLayout
+        val repostedYoutubePlayerView: YouTubePlayerView = view.repostedYoutubePlayerView
+        val repostedPreview: ImageView = view.repostedPreview
+        val repostedPlayBtn: ImageView = view.repostedPlayBtn
+        val repostedText: TextView = view.repostedText
+        val repostedAddress: TextView = view.repostedAddress
+        val repostedGeoIcon: ImageView = view.repostedGeoIcon
+        val repostedAdText: TextView = view.repostedAdText
+        val repostedLikesIcon: ImageView = view.repostedLikesIcon
+        val repostedLikesCounter: TextView = view.repostedLikesCounter
+        val repostedCommentsIcon: ImageView = view.repostedCommentsIcon
+        val repostedCommentsCounter: TextView = view.repostedCommentsCounter
+        val repostedSharesIcon: ImageView = view.repostedSharesIcon
+        val repostedSharesCounter: TextView = view.repostedSharesCounter
+
     }
 }
