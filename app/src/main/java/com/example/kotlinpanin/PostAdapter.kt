@@ -10,13 +10,13 @@ import android.view.ViewGroup
 import android.widget.*
 import androidx.core.content.ContextCompat.startActivity
 import androidx.core.view.isVisible
+import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.resource.bitmap.RoundedCorners
 import com.google.android.youtube.player.YouTubeInitializationResult
 import com.google.android.youtube.player.YouTubePlayer
 import com.google.android.youtube.player.YouTubePlayerView
-import kotlinx.android.synthetic.main.post.view.*
 import kotlinx.android.synthetic.main.post.view.adText
 import kotlinx.android.synthetic.main.post.view.address
 import kotlinx.android.synthetic.main.post.view.avatar
@@ -30,7 +30,6 @@ import kotlinx.android.synthetic.main.post.view.likesIcon
 import kotlinx.android.synthetic.main.post.view.playBtn
 import kotlinx.android.synthetic.main.post.view.preview
 import kotlinx.android.synthetic.main.post.view.repostInfo
-import kotlinx.android.synthetic.main.post.view.repostLine
 import kotlinx.android.synthetic.main.post.view.sharesCounter
 import kotlinx.android.synthetic.main.post.view.sharesIcon
 import kotlinx.android.synthetic.main.post.view.text
@@ -78,8 +77,8 @@ class PostAdapter(private var items: List<PostUiModel>, private val context: Con
     override fun getItemCount(): Int = items.size
 
     private fun hidePost(position: Int) {
-        items = items - items[position]
-        notifyItemRemoved(position)
+        val newItems = items - items[position]
+        setNoteList(newItems)
     }
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
@@ -298,6 +297,12 @@ class PostAdapter(private var items: List<PostUiModel>, private val context: Con
         val repostedCommentsCounter: TextView = view.repostedCommentsCounter
         val repostedSharesIcon: ImageView = view.repostedSharesIcon
         val repostedSharesCounter: TextView = view.repostedSharesCounter
+    }
 
+    fun setNoteList(newItems: List<PostUiModel>) {
+        val postDiffUtilCallback = PostDiffUtilCallback(items, newItems)
+        val postDiffResult = DiffUtil.calculateDiff(postDiffUtilCallback)
+        items = newItems
+        postDiffResult.dispatchUpdatesTo(this)
     }
 }
