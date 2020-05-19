@@ -42,6 +42,8 @@ class PostAdapter(private var items: List<PostUiModel>, private val context: Con
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         return ViewHolder(LayoutInflater.from(parent.context).inflate(R.layout.post_test, parent, false)).apply {
+            var newItems = items
+
             hideBtn.setOnClickListener {
                 hidePost(adapterPosition)
             }
@@ -49,7 +51,7 @@ class PostAdapter(private var items: List<PostUiModel>, private val context: Con
             likesIcon.setOnClickListener {
                 val postUiModel = items[adapterPosition]
                 if (postUiModel.post.isLiked) {
-                    items = items.toMutableList().apply {
+                    newItems = items.toMutableList().apply {
                         set(adapterPosition, postUiModel.copy(
                                 post = postUiModel.post.copy(isLiked = false, likes = postUiModel.post.likes.dec()))
                         )
@@ -57,10 +59,10 @@ class PostAdapter(private var items: List<PostUiModel>, private val context: Con
                     Glide.with(context)
                             .load(R.drawable.likes_none)
                             .into(likesIcon)
-                    likesCounter.text = if (postUiModel.post.likes > 0) postUiModel.post.likes.toString() else ""
-
+                    //likesCounter.text = if (postUiModel.post.likes > 0) postUiModel.post.likes.toString() else ""
+                    likesCounter.text = postUiModel.likesCounterString
                 } else {
-                    items = items.toMutableList().apply {
+                    newItems = items.toMutableList().apply {
                         set(adapterPosition, postUiModel.copy(
                                 post = postUiModel.post.copy(isLiked = true, likes = postUiModel.post.likes.inc()))
                         )
@@ -68,8 +70,10 @@ class PostAdapter(private var items: List<PostUiModel>, private val context: Con
                     Glide.with(context)
                             .load(R.drawable.likes_yes)
                             .into(likesIcon)
-                    likesCounter.text = postUiModel.post.likes.toString()
+                    //likesCounter.text = postUiModel.post.likes.toString()
+                    likesCounter.text = postUiModel.likesCounterString
                 }
+                setNoteList(newItems)
             }
         }
     }
@@ -160,7 +164,7 @@ class PostAdapter(private var items: List<PostUiModel>, private val context: Con
                         holder.repostedPlayBtn.setOnClickListener {
                             holder.repostedPreview.isVisible = false
                             holder.repostedPlayBtn.isVisible = false
-                            holder.repostedYoutubePlayerView.initialize(context.getString(R.string.key_one + R.string.key_two + R.string.key_three),
+                            holder.repostedYoutubePlayerView.initialize(context.getString(R.string.key_one) + context.getString(R.string.key_two) + context.getString(R.string.key_three),
                                     object : YouTubePlayer.OnInitializedListener {
                                         override fun onInitializationSuccess(provider: YouTubePlayer.Provider,
                                                                              youTubePlayer: YouTubePlayer, b: Boolean) {
@@ -222,7 +226,7 @@ class PostAdapter(private var items: List<PostUiModel>, private val context: Con
                 holder.playBtn.setOnClickListener {
                     holder.preview.isVisible = false
                     holder.playBtn.isVisible = false
-                    holder.youtubePlayerView.initialize("AIzaSyDSdq4pV4D-OpQi9bK1ngfE3sQoLZftkCU",
+                    holder.youtubePlayerView.initialize(context.getString(R.string.key_one) + context.getString(R.string.key_two) + context.getString(R.string.key_three),
                             object : YouTubePlayer.OnInitializedListener {
                                 override fun onInitializationSuccess(provider: YouTubePlayer.Provider,
                                                                      youTubePlayer: YouTubePlayer, b: Boolean) {
