@@ -13,7 +13,7 @@ data class PostUiModel(val post: Post, val dateFormatted: String) {
     val sharesIcon = if(post.isShared) R.drawable.shares_yes else R.drawable.shares_none
 }
 
-fun Post.toUiModel(): PostUiModel = PostUiModel(this, secondsToString(this.date.toDate().time, App.applicationContext()))
+fun Post.toUiModel(): PostUiModel = PostUiModel(this, secondsToString(this.date, App.applicationContext()))
 
 private fun secondsToString(postDateInMillis: Long, context: Context):String {
     val milliseconds = LocalDateTime.now().toDate().time - postDateInMillis

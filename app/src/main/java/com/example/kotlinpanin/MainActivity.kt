@@ -8,7 +8,7 @@ import kotlinx.android.synthetic.main.activity_main.*
 
 class MainActivity : YouTubeBaseActivity() {
 
-    private var posts: List<Post> = TestPostRepository().getPosts()
+    private var posts: List<Post> = Api().getPostsFromJson()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
