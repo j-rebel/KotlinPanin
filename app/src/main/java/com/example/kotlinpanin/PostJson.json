@@ -1,0 +1,93 @@
+[
+  {
+    "comments": 0,
+    "date": 1590073740000,
+    "id": 1,
+    "isCommented": false,
+    "isLiked": false,
+    "isShared": false,
+    "likes": 5,
+    "posterAvatar": 2131427339,
+    "posterName": "User One",
+    "shares": 0,
+    "text": "Обычный текстовый пост",
+    "type": "TEXT"
+  },
+  {
+    "address": "Город Москва",
+    "comments": 10,
+    "date": 1589897280000,
+    "geo": {
+      "first": 55.753215,
+      "second": 37.622504
+    },
+    "id": 3,
+    "isCommented": false,
+    "isLiked": false,
+    "isShared": false,
+    "likes": 0,
+    "posterAvatar": 2131427345,
+    "posterName": "User Two",
+    "shares": 0,
+    "text": "Пост-событие с координатами",
+    "type": "EVENT"
+  },
+  {
+    "comments": 0,
+    "date": 1589980020000,
+    "id": 2,
+    "isCommented": false,
+    "isLiked": false,
+    "isShared": false,
+    "likes": 0,
+    "posterAvatar": 2131427342,
+    "posterName": "User Tree",
+    "shares": 3,
+    "text": "Пост с текстом и видео",
+    "type": "VIDEO",
+    "video": "yNLtreZkkL0"
+  },
+  {
+    "comments": 11,
+    "date": 1589803560000,
+    "id": 4,
+    "isCommented": false,
+    "isLiked": false,
+    "isShared": false,
+    "likes": 3,
+    "posterAvatar": 2131427336,
+    "posterName": "User Four",
+    "repost": {
+      "comments": 0,
+      "date": 1589980020000,
+      "id": 2,
+      "isCommented": false,
+      "isLiked": false,
+      "isShared": false,
+      "likes": 0,
+      "posterAvatar": 2131427342,
+      "posterName": "User Tree",
+      "shares": 3,
+      "text": "Пост с текстом и видео",
+      "type": "VIDEO",
+      "video": "yNLtreZkkL0"
+    },
+    "shares": 2,
+    "text": "Репост с текстовым комментарием",
+    "type": "REPOST"
+  },
+  {
+    "comments": 0,
+    "date": 1589713500000,
+    "id": 5,
+    "isCommented": false,
+    "isLiked": false,
+    "isShared": false,
+    "likes": 0,
+    "posterAvatar": 2131427333,
+    "posterName": "User Five",
+    "shares": 0,
+    "text": "Рекламный пост",
+    "type": "AD"
+  }
+]
