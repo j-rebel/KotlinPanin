@@ -1,12 +1,12 @@
 package com.example.kotlinpanin
 
 import android.os.Bundle
-import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.android.youtube.player.YouTubeBaseActivity
 import kotlinx.android.synthetic.main.activity_main.*
+import kotlinx.coroutines.*
 
-class MainActivity : YouTubeBaseActivity() {
+class MainActivity : YouTubeBaseActivity(), CoroutineScope by MainScope() {
 
     private var posts: List<Post> = Api().getPostsFromJson()
 
