@@ -20,7 +20,7 @@ class Api {
         }
     }
 
-    fun getPostsFromJson(): List<Post> {
+    /*fun getPostsFromJson(): List<Post> {
         val gson = GsonBuilder().setPrettyPrinting().create()
         val jsonString: String = (gson.toJson(TestPostRepository().getPosts()))
         Log.d("result JSON", jsonString)
@@ -31,5 +31,5 @@ class Api {
     inline fun <reified T> parseArray(json: String, typeToken: Type): T {
         val gson = GsonBuilder().setPrettyPrinting().create()
         return gson.fromJson<T>(json, typeToken)
-    }
+    }*/
 }
