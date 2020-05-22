@@ -1,12 +1,24 @@
 package com.example.kotlinpanin
 
 import android.util.Log
-import com.google.common.reflect.TypeToken
+import com.google.gson.reflect.TypeToken
 import com.google.gson.GsonBuilder
+import io.ktor.client.HttpClient
+import io.ktor.client.engine.cio.CIO
+import io.ktor.client.features.json.GsonSerializer
+import io.ktor.client.features.json.JsonFeature
+import io.ktor.http.ContentType
 import java.lang.reflect.Type
 
 class Api {
-    //val url = "https://raw.githubusercontent.com/j-rebel/KotlinPanin/master/app/src/main/java/com/example/kotlinpanin/PostJson.json"
+    val url = "https://raw.githubusercontent.com/j-rebel/KotlinPanin/master/app/src/main/java/com/example/kotlinpanin/PostJson.json"
+
+    val client = HttpClient {
+        install(JsonFeature) {
+            acceptContentTypes = listOf(ContentType.Text.Plain, ContentType.Application.Json)
+            serializer = GsonSerializer()
+        }
+    }
 
     fun getPostsFromJson(): List<Post> {
         val gson = GsonBuilder().setPrettyPrinting().create()
