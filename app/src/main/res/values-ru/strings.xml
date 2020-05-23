@@ -50,4 +50,7 @@
 
     <string name="ad_text">Рекламная запись</string>
     <string name="repost_from">Репост записи пользователя %1$s, опубликованной %2$s</string>
+
+    <string name="loading_title">Загружаем данные…</string>
+    <string name="loading_progress">%1$d%% загружено</string>
 </resources>

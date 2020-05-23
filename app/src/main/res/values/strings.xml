@@ -55,4 +55,7 @@
 
     <string name="ad_text">AD</string>
     <string name="repost_from">Repost from %1$s, posted %2$s</string>
+
+    <string name="loading_title">Loading data…</string>
+    <string name="loading_progress">%1$d%% loaded</string>
 </resources>

@@ -1,6 +1,10 @@
 package com.example.kotlinpanin
 
 import android.os.Bundle
+import android.util.Log
+import android.view.animation.Animation
+import android.view.animation.AnimationUtils
+import androidx.core.view.isVisible
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.android.youtube.player.YouTubeBaseActivity
 import io.ktor.client.request.get
@@ -8,8 +12,6 @@ import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.coroutines.*
 
 class MainActivity : YouTubeBaseActivity(), CoroutineScope by MainScope() {
-
-    lateinit var posts: List<Post>
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -19,10 +21,43 @@ class MainActivity : YouTubeBaseActivity(), CoroutineScope by MainScope() {
     }
 
     fun fetchData() = launch {
-        posts = withContext(Dispatchers.IO) {
+        val allPosts = withContext(Dispatchers.IO) {
             Api().client.get<List<Post>>(Api().url)
         }
-        postList.adapter = PostAdapter(posts.map(Post::toUiModel), App.applicationContext())
+        val userPosts = allPosts.filter { it.type != PostType.AD }
+        val adPosts = allPosts.filter { it.type == PostType.AD }
+        val adapterPosts: MutableList<Post> = mutableListOf<Post>()
+        for (i in 0 until userPosts.size) {
+            if (i > 0 && i % 2 == 0) {
+                for (j in 0 until adPosts.size) {
+                    adapterPosts.add(adPosts[j])
+                }
+            }
+            adapterPosts.add(userPosts[i])
+        }
+
+        postList.adapter = PostAdapter(adapterPosts.map(Post::toUiModel), App.applicationContext())
+        for (i in 1..adapterPosts.size) {
+            delay(500)
+            progressBar.incrementProgressBy(100 / adapterPosts.size)
+            progressText.text = App.applicationContext().getString(R.string.loading_progress, progressBar.progress)
+        }
+
+        val animation = AnimationUtils.loadAnimation(App.applicationContext(), R.anim.alpha)
+        animation.setAnimationListener(object : Animation.AnimationListener {
+            override fun onAnimationRepeat(animation: Animation?) {
+                progressLayout.isVisible = false
+            }
+
+            override fun onAnimationEnd(animation: Animation?) {
+                progressLayout.isVisible = false
+            }
+
+            override fun onAnimationStart(animation: Animation?) {
+                Log.d("Animation", "started")
+            }
+        })
+        progressLayout.startAnimation(animation)
     }
 
     override fun onDestroy() {
