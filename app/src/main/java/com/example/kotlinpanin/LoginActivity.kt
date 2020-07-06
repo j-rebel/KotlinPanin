@@ -1,6 +1,9 @@
 package com.example.kotlinpanin
 
+import android.app.Dialog
+import android.app.ProgressDialog
 import android.content.Context
+import android.content.DialogInterface
 import android.content.Intent
 import android.content.SharedPreferences
 import android.os.Bundle
@@ -14,8 +17,10 @@ import io.ktor.util.KtorExperimentalAPI
 import kotlinx.android.synthetic.main.activity_login.*
 import kotlinx.coroutines.*
 
+
 class LoginActivity : AppCompatActivity(), CoroutineScope by MainScope() {
 
+    lateinit var pd: ProgressDialog
     val APP_PREFERENCES = "mysettings"
     val APP_PREFERENCES_TOKEN = "TOKEN"
     lateinit var mSettings: SharedPreferences
@@ -25,8 +30,9 @@ class LoginActivity : AppCompatActivity(), CoroutineScope by MainScope() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_login)
-        mSettings = getSharedPreferences(APP_PREFERENCES, Context.MODE_PRIVATE)
 
+        mSettings = getSharedPreferences(APP_PREFERENCES, Context.MODE_PRIVATE)
+        pd = ProgressDialog(this)
         checkBox.setOnClickListener{
             if(checkBox.isChecked) {
                 btnRegestrate.isVisible = false
@@ -43,8 +49,6 @@ class LoginActivity : AppCompatActivity(), CoroutineScope by MainScope() {
 
         btnLogin.setOnClickListener {
             login(emailInput.text.toString(), passInput.text.toString())
-            val intent = Intent(this, MainActivity::class.java)
-            startActivity(intent)
         }
         btnRegestrate.setOnClickListener {
             registrate(emailInput.text.toString(), passInput.text.toString(), displayNameInput.text.toString(), avatarInput.text.toString())
@@ -53,6 +57,9 @@ class LoginActivity : AppCompatActivity(), CoroutineScope by MainScope() {
 
     @KtorExperimentalAPI
     fun login(email: String, password: String) = launch {
+        pd.setTitle("Login")
+        pd.setMessage("Processing")
+        pd.show()
         try {
             val requestedToken = withContext(Dispatchers.IO) {
                 val params = Parameters.build {
@@ -65,10 +72,13 @@ class LoginActivity : AppCompatActivity(), CoroutineScope by MainScope() {
             val editor = mSettings.edit();
             editor.putString(APP_PREFERENCES_TOKEN, requestedToken.token)
             editor.apply()
-            Toast.makeText(applicationContext, "User authorized", Toast.LENGTH_LONG).show()
+            delay(3000)
+            //Toast.makeText(applicationContext, "User authorized", Toast.LENGTH_LONG).show()
+            pd.hide()
+            val intent = Intent(App.applicationContext(), MainActivity::class.java)
+            startActivity(intent)
         } catch (e: Exception) {
             Log.e("Login", e.message, Throwable())
-            Toast.makeText(applicationContext, "Failed to login", Toast.LENGTH_LONG).show()
         }
     }
 
