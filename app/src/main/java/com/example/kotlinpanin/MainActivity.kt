@@ -1,5 +1,8 @@
 package com.example.kotlinpanin
 
+import android.content.Context
+import android.content.Intent
+import android.content.SharedPreferences
 import android.os.Bundle
 import android.util.Log
 import android.view.animation.Animation
@@ -13,14 +16,22 @@ import kotlinx.coroutines.*
 
 class MainActivity : YouTubeBaseActivity(), CoroutineScope by MainScope() {
 
+    val APP_PREFERENCES = "mysettings"
+    val APP_PREFERENCES_TOKEN = "TOKEN"
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        val mSettings: SharedPreferences = getSharedPreferences(APP_PREFERENCES, Context.MODE_PRIVATE)
+        if (mSettings.getString(APP_PREFERENCES_TOKEN ,"").equals("")) {
+            val intent = Intent(this, LoginActivity::class.java)
+            startActivity(intent)
+        }
         setContentView(R.layout.activity_main)
         postList.layoutManager = LinearLayoutManager(this)
-        fetchData()
+        //fetchData()
     }
 
-    fun fetchData() = launch {
+/*    fun fetchData() = launch {
         val allPosts = withContext(Dispatchers.IO) {
             Api().client.get<List<Post>>(Api().url)
         }
@@ -58,7 +69,7 @@ class MainActivity : YouTubeBaseActivity(), CoroutineScope by MainScope() {
             }
         })
         progressLayout.startAnimation(animation)
-    }
+    }*/
 
     override fun onDestroy() {
         super.onDestroy()
