@@ -10,7 +10,10 @@ import android.view.animation.AnimationUtils
 import androidx.core.view.isVisible
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.android.youtube.player.YouTubeBaseActivity
+import io.ktor.client.features.cookies.cookies
 import io.ktor.client.request.get
+import io.ktor.client.request.header
+import io.ktor.util.KtorExperimentalAPI
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.coroutines.*
 
@@ -18,25 +21,37 @@ class MainActivity : YouTubeBaseActivity(), CoroutineScope by MainScope() {
 
     val APP_PREFERENCES = "mysettings"
     val APP_PREFERENCES_TOKEN = "TOKEN"
+    var TOKEN = ""
 
+    @KtorExperimentalAPI
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         val mSettings: SharedPreferences = getSharedPreferences(APP_PREFERENCES, Context.MODE_PRIVATE)
-        if (mSettings.getString(APP_PREFERENCES_TOKEN ,"").equals("")) {
+        TOKEN = mSettings.getString(APP_PREFERENCES_TOKEN ,"").toString()
+        //TOKEN = "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJBdXRoZW50aWNhdGlvbiIsImlzcyI6InBvc3RTZXJ2ZXIiLCJpZCI6MiwiZXhwIjoxNTk0MTI2OTQ0fQ.I1WWdf4NmZXk41pWygVDpWr9SviZE_0b90waejSILnxosn6WhO52DeY8G14ZmSOUtTdMfPs7O7-xr6Aql5f0TQ"
+        if (TOKEN.equals("")) {
             val intent = Intent(this, LoginActivity::class.java)
             startActivity(intent)
+        } else {
+            setContentView(R.layout.activity_main)
+            postList.layoutManager = LinearLayoutManager(this)
+            fetchData()
         }
-        setContentView(R.layout.activity_main)
-        postList.layoutManager = LinearLayoutManager(this)
-        //fetchData()
+
     }
 
-/*    fun fetchData() = launch {
+    @KtorExperimentalAPI
+    fun fetchData() = launch {
+        fun selector(p: Post): Long = p.date
         val allPosts = withContext(Dispatchers.IO) {
-            Api().client.get<List<Post>>(Api().url)
+            Api().client.get<List<Post>>(Api().getAllPostsUrl) {
+                header("Authorization", "Bearer $TOKEN")
+                header("Cookie", "MY_SESSION=userId%3D%2523l2")
+            }
         }
-        val userPosts = allPosts.filter { it.type != PostType.AD }
-        val adPosts = allPosts.filter { it.type == PostType.AD }
+        allPosts.sortedByDescending { selector(it) }
+        val userPosts = allPosts.filter { it.type != PostType.AD }.sortedByDescending { selector(it) }
+        val adPosts = allPosts.filter { it.type == PostType.AD }.sortedByDescending { selector(it) }
         val adapterPosts: MutableList<Post> = mutableListOf<Post>()
         for (i in 0 until userPosts.size) {
             if (i > 0 && i % 2 == 0) {
@@ -69,7 +84,7 @@ class MainActivity : YouTubeBaseActivity(), CoroutineScope by MainScope() {
             }
         })
         progressLayout.startAnimation(animation)
-    }*/
+    }
 
     override fun onDestroy() {
         super.onDestroy()

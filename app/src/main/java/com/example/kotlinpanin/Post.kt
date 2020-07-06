@@ -4,7 +4,7 @@ import org.joda.time.LocalDateTime
 
 data class Post(val id: Long,
                 val posterName: String,
-                val posterAvatar: Int,
+                val posterAvatar: String,
                 val date: Long,
                 val type: PostType,
                 val repost: Post?,

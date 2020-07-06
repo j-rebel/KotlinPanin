@@ -9,7 +9,7 @@ class TestPostRepository : PostRepository {
             val textPost = Post(
                     1,
                     "User One",
-                    R.mipmap.test_img_one,
+                    "R.mipmap.test_img_one",
                     LocalDateTime(2020, 5, 21, 15, 9, 0, 0).toDate().time,
                     PostType.TEXT,
                     null,
@@ -24,7 +24,7 @@ class TestPostRepository : PostRepository {
             val videoPost = Post(
                     2,
                     "User Tree",
-                    R.mipmap.test_img_three,
+                    "R.mipmap.test_img_three",
                     LocalDateTime(2020, 5, 20, 13, 7, 0, 0).toDate().time,
                     PostType.VIDEO,
                     null,
@@ -39,7 +39,7 @@ class TestPostRepository : PostRepository {
             val eventPost = Post(
                     3,
                     "User Two",
-                    R.mipmap.test_img_two,
+                    "R.mipmap.test_img_two",
                     LocalDateTime(2020, 5, 19, 14, 8, 0, 0).toDate().time,
                     PostType.EVENT,
                     null,
@@ -54,7 +54,7 @@ class TestPostRepository : PostRepository {
             val rePost = Post(
                     4,
                     "User Four",
-                    R.mipmap.test_img_four,
+                    "R.mipmap.test_img_four",
                     LocalDateTime(2020, 5, 18, 12, 6, 0, 0).toDate().time,
                     PostType.REPOST,
                     videoPost,
@@ -69,7 +69,7 @@ class TestPostRepository : PostRepository {
             val adPost = Post(
                     5,
                     "User Five",
-                    R.mipmap.test_img_five,
+                    "R.mipmap.test_img_five",
                     LocalDateTime(2020, 5, 17, 11, 5, 0, 0).toDate().time,
                     PostType.AD,
                     null,

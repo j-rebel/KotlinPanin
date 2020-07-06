@@ -2,6 +2,7 @@ package com.example.kotlinpanin
 
 import android.content.Context
 import android.content.Intent
+import android.content.Intent.FLAG_ACTIVITY_NEW_TASK
 import android.net.Uri
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -146,6 +147,7 @@ class PostAdapter(private var items: List<PostUiModel>, private val context: Con
                                 action = Intent.ACTION_VIEW
                                 data = Uri.parse("geo:${postUiModel.post.repost?.geo?.first},${postUiModel.post.repost?.geo?.second}")
                             }
+                            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
                             startActivity(context, intent, Bundle.EMPTY)
                         }
                     }
@@ -205,6 +207,7 @@ class PostAdapter(private var items: List<PostUiModel>, private val context: Con
                         action = Intent.ACTION_VIEW
                         data = Uri.parse("geo:${postUiModel.post.geo?.first},${postUiModel.post.geo?.second}")
                     }
+                    intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
                     startActivity(context, intent, Bundle.EMPTY)
                 }
             }
