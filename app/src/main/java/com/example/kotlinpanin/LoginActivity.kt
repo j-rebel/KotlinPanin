@@ -15,13 +15,12 @@ import io.ktor.http.Parameters
 import io.ktor.util.KtorExperimentalAPI
 import kotlinx.android.synthetic.main.activity_login.*
 import kotlinx.coroutines.*
+import androidx.core.content.edit
 
 
 class LoginActivity : AppCompatActivity(), CoroutineScope by MainScope() {
 
     lateinit var pd: ProgressDialog
-    val APP_PREFERENCES = "mysettings"
-    val APP_PREFERENCES_TOKEN = "TOKEN"
     lateinit var mSettings: SharedPreferences
 
 
@@ -71,9 +70,9 @@ class LoginActivity : AppCompatActivity(), CoroutineScope by MainScope() {
             }
             Api().client.cookies("post-app-back.herokuapp.com")
             Log.i("cookie", Api().client.cookies("post-app-back.herokuapp.com").toString())
-            val editor = mSettings.edit()
-            editor.putString(APP_PREFERENCES_TOKEN, requestedToken.token)
-            editor.apply()
+            mSettings.edit {
+                putString(APP_PREFERENCES_TOKEN, requestedToken.token)
+            }
             delay(3000)
             pd.hide()
             val intent = Intent(App.applicationContext(), MainActivity::class.java)
@@ -99,13 +98,18 @@ class LoginActivity : AppCompatActivity(), CoroutineScope by MainScope() {
             }
             Api().client.cookies("post-app-back.herokuapp.com")
             Log.i("cookie", Api().client.cookies("post-app-back.herokuapp.com").toString())
-            val editor = mSettings.edit();
-            editor.putString(APP_PREFERENCES_TOKEN, requestedToken.token)
-            editor.apply()
+            mSettings.edit {
+                putString(APP_PREFERENCES_TOKEN, requestedToken.token)
+            }
             Toast.makeText(applicationContext, "User created", Toast.LENGTH_LONG).show()
         } catch (e: Exception) {
             Log.e("Registration", e.message, Throwable())
             Toast.makeText(applicationContext, "Failed to registrate", Toast.LENGTH_LONG).show()
         }
+    }
+
+    private companion object {
+        const val APP_PREFERENCES = "mysettings"
+        const val APP_PREFERENCES_TOKEN = "TOKEN"
     }
 }
