@@ -61,7 +61,7 @@ class LoginActivity : AppCompatActivity(), CoroutineScope by MainScope() {
         pd.show()
         try {
             Api().client.cookies("post-app-back.herokuapp.com")
-            Log.i("cookie", Api().client.cookies("MY_SESSION").toString())
+            Log.i("cookie", Api().client.cookies("post-app-back.herokuapp.com").toString())
             val requestedToken = withContext(Dispatchers.IO) {
                 val params = Parameters.build {
                     append("email", email)
@@ -70,7 +70,7 @@ class LoginActivity : AppCompatActivity(), CoroutineScope by MainScope() {
                 Api().client.submitForm<Token>(Api().loginUrl, params, false)// параметры в form
             }
             Api().client.cookies("post-app-back.herokuapp.com")
-            Log.i("cookie", Api().client.cookies("MY_SESSION").toString())
+            Log.i("cookie", Api().client.cookies("post-app-back.herokuapp.com").toString())
             val editor = mSettings.edit()
             editor.putString(APP_PREFERENCES_TOKEN, requestedToken.token)
             editor.apply()

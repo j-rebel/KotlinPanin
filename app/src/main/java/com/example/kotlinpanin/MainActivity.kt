@@ -45,10 +45,10 @@ class MainActivity : YouTubeBaseActivity(), CoroutineScope by MainScope() {
         val allPosts = withContext(Dispatchers.IO) {
             Api().client.get<List<Post>>(Api().getAllPostsUrl) {
                 header("Authorization", "Bearer $TOKEN")
-                header("Cookie", Api().client.cookies("MY_SESSION"))
+                //header("Cookie", Api().client.cookies("post-app-back.herokuapp.com"))
             }
         }
-        Log.i("cookie", Api().client.cookies("MY_SESSION").toString())
+        Log.i("cookie", Api().client.cookies("post-app-back.herokuapp.com").toString())
         allPosts.sortedByDescending { selector(it) }
         val userPosts = allPosts.filter { it.type != PostType.AD }.sortedByDescending { selector(it) }
         val adPosts = allPosts.filter { it.type == PostType.AD }.sortedByDescending { selector(it) }
