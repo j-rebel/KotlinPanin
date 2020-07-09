@@ -18,7 +18,7 @@ import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.coroutines.*
 
 class MainActivity : YouTubeBaseActivity(), CoroutineScope by MainScope() {
-    
+
     var TOKEN = ""
 
     @KtorExperimentalAPI
