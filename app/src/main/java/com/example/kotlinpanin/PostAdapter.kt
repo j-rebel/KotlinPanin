@@ -58,8 +58,7 @@ class PostAdapter(private var items: List<PostUiModel>, private val context: Con
 
             likesIcon.setOnClickListener {
                 val postUiModel = items[adapterPosition]
-                addLike(postUiModel.post.id)
-                /*if (postUiModel.post.isLiked) {
+                if (postUiModel.post.isLiked) {
                     newItems = items.toMutableList().apply {
                         set(adapterPosition, postUiModel.copy(
                                 post = postUiModel.post.copy(isLiked = false, likes = postUiModel.post.likes.dec()))
@@ -82,7 +81,8 @@ class PostAdapter(private var items: List<PostUiModel>, private val context: Con
                     //likesCounter.text = postUiModel.post.likes.toString()
                     likesCounter.text = postUiModel.likesCounterString
                 }
-                setNoteList(newItems)*/
+                setNoteList(newItems)
+                addLike(postUiModel.post.id)
             }
         }
     }

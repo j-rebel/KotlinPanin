@@ -56,6 +56,7 @@ class LoginActivity : AppCompatActivity() {
 
     @KtorExperimentalAPI
     fun login(email: String, password: String) = lifecycleScope.launch {
+        pd.setCancelable(false)
         pd.setTitle("Login")
         pd.setMessage("Processing")
         pd.show()
@@ -78,11 +79,17 @@ class LoginActivity : AppCompatActivity() {
             startActivity(intent)
         } catch (e: Exception) {
             Log.e("Login", e.message, Throwable())
+        } finally {
+            pd.hide()
         }
     }
 
     @KtorExperimentalAPI
     fun registrate(email: String, password: String, displayName: String, avatar: String) = lifecycleScope.launch {
+        pd.setCancelable(false)
+        pd.setTitle("New user")
+        pd.setMessage("Creating")
+        pd.show()
         try {
             Api().client.cookies("post-app-back.herokuapp.com")
             Log.i("cookie", Api().client.cookies("post-app-back.herokuapp.com").toString())
@@ -98,10 +105,14 @@ class LoginActivity : AppCompatActivity() {
             mSettings.edit {
                 putString(APP_PREFERENCES_TOKEN, requestedToken.token)
             }
-            Toast.makeText(applicationContext, "User created", Toast.LENGTH_LONG).show()
+            pd.hide()
+            val intent = Intent(App.applicationContext(), MainActivity::class.java)
+            startActivity(intent)
         } catch (e: Exception) {
             Log.e("Registration", e.message, Throwable())
             Toast.makeText(applicationContext, "Failed to registrate", Toast.LENGTH_LONG).show()
+        } finally {
+            pd.hide()
         }
     }
 
