@@ -10,7 +10,9 @@ import android.view.animation.AnimationUtils
 import androidx.core.view.isVisible
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.android.youtube.player.YouTubeBaseActivity
+import io.ktor.client.features.ClientRequestException
 import io.ktor.client.features.cookies.cookies
+import io.ktor.client.features.cookies.get
 import io.ktor.client.request.get
 import io.ktor.client.request.header
 import io.ktor.util.KtorExperimentalAPI
@@ -46,9 +48,9 @@ class MainActivity : YouTubeBaseActivity(), CoroutineScope by MainScope() {
         val allPosts = withContext(Dispatchers.IO) {
             Api().client.get<List<Post>>(Api().getAllPostsUrl) {
                 header("Authorization", "Bearer $TOKEN")
-                header("Cookie", "MY_SESSION=userId%3D%2523l2")
             }
         }
+        Log.i("cookie", Api().client.cookies("post-app-back.herokuapp.com").toString())
         allPosts.sortedByDescending { selector(it) }
         val userPosts = allPosts.filter { it.type != PostType.AD }.sortedByDescending { selector(it) }
         val adPosts = allPosts.filter { it.type == PostType.AD }.sortedByDescending { selector(it) }
@@ -62,7 +64,7 @@ class MainActivity : YouTubeBaseActivity(), CoroutineScope by MainScope() {
             adapterPosts.add(userPosts[i])
         }
 
-        postList.adapter = PostAdapter(adapterPosts.map(Post::toUiModel), App.applicationContext())
+        postList.adapter = PostAdapter(adapterPosts.map(Post::toUiModel), App.applicationContext(), TOKEN)
         for (i in 1..adapterPosts.size) {
             delay(500)
             progressBar.incrementProgressBy(100 / adapterPosts.size)

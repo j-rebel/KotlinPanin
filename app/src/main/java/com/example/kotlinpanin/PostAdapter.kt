@@ -3,8 +3,10 @@ package com.example.kotlinpanin
 import android.content.Context
 import android.content.Intent
 import android.content.Intent.FLAG_ACTIVITY_NEW_TASK
+import android.content.SharedPreferences
 import android.net.Uri
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -18,6 +20,13 @@ import com.bumptech.glide.load.resource.bitmap.RoundedCorners
 import com.google.android.youtube.player.YouTubeInitializationResult
 import com.google.android.youtube.player.YouTubePlayer
 import com.google.android.youtube.player.YouTubePlayerView
+import io.ktor.client.features.ClientRequestException
+import io.ktor.client.features.cookies.cookies
+import io.ktor.client.request.forms.submitForm
+import io.ktor.client.request.header
+import io.ktor.client.request.post
+import io.ktor.http.Parameters
+import io.ktor.util.KtorExperimentalAPI
 import kotlinx.android.synthetic.main.post.view.adText
 import kotlinx.android.synthetic.main.post.view.address
 import kotlinx.android.synthetic.main.post.view.avatar
@@ -38,9 +47,11 @@ import kotlinx.android.synthetic.main.post.view.userName
 import kotlinx.android.synthetic.main.post.view.youtubeLayout
 import kotlinx.android.synthetic.main.post.view.youtubePlayerView
 import kotlinx.android.synthetic.main.post_test.view.*
+import kotlinx.coroutines.*
 
-class PostAdapter(private var items: List<PostUiModel>, private val context: Context) : RecyclerView.Adapter<PostAdapter.ViewHolder>() {
+class PostAdapter(private var items: List<PostUiModel>, private val context: Context, private  val TOKEN: String) : RecyclerView.Adapter<PostAdapter.ViewHolder>(), CoroutineScope by MainScope() {
 
+    @KtorExperimentalAPI
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         return ViewHolder(LayoutInflater.from(parent.context).inflate(R.layout.post_test, parent, false)).apply {
             var newItems = items
@@ -51,7 +62,8 @@ class PostAdapter(private var items: List<PostUiModel>, private val context: Con
 
             likesIcon.setOnClickListener {
                 val postUiModel = items[adapterPosition]
-                if (postUiModel.post.isLiked) {
+                addLike(postUiModel.post.id)
+                /*if (postUiModel.post.isLiked) {
                     newItems = items.toMutableList().apply {
                         set(adapterPosition, postUiModel.copy(
                                 post = postUiModel.post.copy(isLiked = false, likes = postUiModel.post.likes.dec()))
@@ -74,7 +86,7 @@ class PostAdapter(private var items: List<PostUiModel>, private val context: Con
                     //likesCounter.text = postUiModel.post.likes.toString()
                     likesCounter.text = postUiModel.likesCounterString
                 }
-                setNoteList(newItems)
+                setNoteList(newItems)*/
             }
         }
     }
@@ -311,5 +323,22 @@ class PostAdapter(private var items: List<PostUiModel>, private val context: Con
         val postDiffResult = DiffUtil.calculateDiff(postDiffUtilCallback)
         items = newItems
         postDiffResult.dispatchUpdatesTo(this)
+    }
+
+    @KtorExperimentalAPI
+    fun addLike(postId: Long) = launch {
+
+
+
+        try {
+            val params = Parameters.build {
+                append("post", postId.toString())
+            }
+            val req = Api().client.submitForm<Token>(Api().likeUrl, params, false) {
+                header("Authorization", "Bearer $TOKEN")
+            }
+        } catch (e: ClientRequestException) {
+            Log.e("Error", e.message)
+        }
     }
 }

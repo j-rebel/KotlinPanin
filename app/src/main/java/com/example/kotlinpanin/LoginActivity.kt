@@ -11,6 +11,7 @@ import android.util.Log
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.isVisible
+import io.ktor.client.features.cookies.cookies
 import io.ktor.client.request.forms.submitForm
 import io.ktor.http.Parameters
 import io.ktor.util.KtorExperimentalAPI
@@ -66,14 +67,13 @@ class LoginActivity : AppCompatActivity(), CoroutineScope by MainScope() {
                     append("email", email)
                     append("password", password)
                 }
+                Api().client.cookies("post-app-back.herokuapp.com")
                 Api().client.submitForm<Token>(Api().loginUrl, params, false)// параметры в form
             }
-            //Toast.makeText(applicationContext, requestedToken.token, Toast.LENGTH_LONG).show()
-            val editor = mSettings.edit();
+            val editor = mSettings.edit()
             editor.putString(APP_PREFERENCES_TOKEN, requestedToken.token)
             editor.apply()
             delay(3000)
-            //Toast.makeText(applicationContext, "User authorized", Toast.LENGTH_LONG).show()
             pd.hide()
             val intent = Intent(App.applicationContext(), MainActivity::class.java)
             startActivity(intent)
@@ -92,6 +92,7 @@ class LoginActivity : AppCompatActivity(), CoroutineScope by MainScope() {
                     append("password", password)
                     append("avatar", avatar)
                 }
+                Api().client.cookies("post-app-back.herokuapp.com")
                 Api().client.submitForm<Token>(Api().registrationUrl, params, false)// параметры в form
 
             }
