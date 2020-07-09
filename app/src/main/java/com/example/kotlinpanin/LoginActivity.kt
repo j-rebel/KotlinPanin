@@ -1,9 +1,7 @@
 package com.example.kotlinpanin
 
-import android.app.Dialog
 import android.app.ProgressDialog
 import android.content.Context
-import android.content.DialogInterface
 import android.content.Intent
 import android.content.SharedPreferences
 import android.os.Bundle
@@ -62,14 +60,17 @@ class LoginActivity : AppCompatActivity(), CoroutineScope by MainScope() {
         pd.setMessage("Processing")
         pd.show()
         try {
+            Api().client.cookies("post-app-back.herokuapp.com")
+            Log.i("cookie", Api().client.cookies("MY_SESSION").toString())
             val requestedToken = withContext(Dispatchers.IO) {
                 val params = Parameters.build {
                     append("email", email)
                     append("password", password)
                 }
-                Api().client.cookies("post-app-back.herokuapp.com")
                 Api().client.submitForm<Token>(Api().loginUrl, params, false)// параметры в form
             }
+            Api().client.cookies("post-app-back.herokuapp.com")
+            Log.i("cookie", Api().client.cookies("MY_SESSION").toString())
             val editor = mSettings.edit()
             editor.putString(APP_PREFERENCES_TOKEN, requestedToken.token)
             editor.apply()
@@ -85,6 +86,8 @@ class LoginActivity : AppCompatActivity(), CoroutineScope by MainScope() {
     @KtorExperimentalAPI
     fun registrate(email: String, password: String, displayName: String, avatar: String) = launch {
         try {
+            Api().client.cookies("post-app-back.herokuapp.com")
+            Log.i("cookie", Api().client.cookies("post-app-back.herokuapp.com").toString())
             val requestedToken = withContext(Dispatchers.IO) {
                 val params = Parameters.build {
                     append("displayName", displayName)
@@ -92,11 +95,10 @@ class LoginActivity : AppCompatActivity(), CoroutineScope by MainScope() {
                     append("password", password)
                     append("avatar", avatar)
                 }
-                Api().client.cookies("post-app-back.herokuapp.com")
                 Api().client.submitForm<Token>(Api().registrationUrl, params, false)// параметры в form
-
             }
-            //Toast.makeText(applicationContext, requestedToken.token, Toast.LENGTH_LONG).show()
+            Api().client.cookies("post-app-back.herokuapp.com")
+            Log.i("cookie", Api().client.cookies("post-app-back.herokuapp.com").toString())
             val editor = mSettings.edit();
             editor.putString(APP_PREFERENCES_TOKEN, requestedToken.token)
             editor.apply()

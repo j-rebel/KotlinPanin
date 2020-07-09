@@ -10,9 +10,7 @@ import android.view.animation.AnimationUtils
 import androidx.core.view.isVisible
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.android.youtube.player.YouTubeBaseActivity
-import io.ktor.client.features.ClientRequestException
 import io.ktor.client.features.cookies.cookies
-import io.ktor.client.features.cookies.get
 import io.ktor.client.request.get
 import io.ktor.client.request.header
 import io.ktor.util.KtorExperimentalAPI
@@ -30,7 +28,6 @@ class MainActivity : YouTubeBaseActivity(), CoroutineScope by MainScope() {
         super.onCreate(savedInstanceState)
         val mSettings: SharedPreferences = getSharedPreferences(APP_PREFERENCES, Context.MODE_PRIVATE)
         TOKEN = mSettings.getString(APP_PREFERENCES_TOKEN ,"").toString()
-        //TOKEN = "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJBdXRoZW50aWNhdGlvbiIsImlzcyI6InBvc3RTZXJ2ZXIiLCJpZCI6MiwiZXhwIjoxNTk0MTI2OTQ0fQ.I1WWdf4NmZXk41pWygVDpWr9SviZE_0b90waejSILnxosn6WhO52DeY8G14ZmSOUtTdMfPs7O7-xr6Aql5f0TQ"
         if (TOKEN.equals("")) {
             val intent = Intent(this, LoginActivity::class.java)
             startActivity(intent)
@@ -48,9 +45,10 @@ class MainActivity : YouTubeBaseActivity(), CoroutineScope by MainScope() {
         val allPosts = withContext(Dispatchers.IO) {
             Api().client.get<List<Post>>(Api().getAllPostsUrl) {
                 header("Authorization", "Bearer $TOKEN")
+                header("Cookie", Api().client.cookies("MY_SESSION"))
             }
         }
-        Log.i("cookie", Api().client.cookies("post-app-back.herokuapp.com").toString())
+        Log.i("cookie", Api().client.cookies("MY_SESSION").toString())
         allPosts.sortedByDescending { selector(it) }
         val userPosts = allPosts.filter { it.type != PostType.AD }.sortedByDescending { selector(it) }
         val adPosts = allPosts.filter { it.type == PostType.AD }.sortedByDescending { selector(it) }

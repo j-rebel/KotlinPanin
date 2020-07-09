@@ -43,11 +43,8 @@ class Api : CoroutineScope by MainScope() {
         install(HttpCookies) {
             // Will keep an in-memory map with all the cookies from previous requests.
             storage = AcceptAllCookiesStorage()
+
         }
     }
-
-
-
-
 }
 

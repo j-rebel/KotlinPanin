@@ -334,8 +334,9 @@ class PostAdapter(private var items: List<PostUiModel>, private val context: Con
             val params = Parameters.build {
                 append("post", postId.toString())
             }
-            val req = Api().client.submitForm<Token>(Api().likeUrl, params, false) {
+            Api().client.submitForm<Token>(Api().likeUrl, params, false) {
                 header("Authorization", "Bearer $TOKEN")
+                header("Cookie", Api().client.cookies(" kkmkm"))
             }
         } catch (e: ClientRequestException) {
             Log.e("Error", e.message)
