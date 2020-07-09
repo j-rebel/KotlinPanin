@@ -61,15 +61,15 @@ class LoginActivity : AppCompatActivity() {
         pd.setMessage("Processing")
         pd.show()
         try {
-            Api().client.cookies("post-app-back.herokuapp.com")
-            Log.i("cookie", Api().client.cookies("post-app-back.herokuapp.com").toString())
+            Api.client.cookies("post-app-back.herokuapp.com")
+            Log.i("cookie", Api.client.cookies("post-app-back.herokuapp.com").toString())
             val params = Parameters.build {
                 append("email", email)
                 append("password", password)
             }
-            val requestedToken = Api().client.submitForm<Token>(Api().loginUrl, params, false)// параметры в form
-            Api().client.cookies("post-app-back.herokuapp.com")
-            Log.i("cookie", Api().client.cookies("post-app-back.herokuapp.com").toString())
+            val requestedToken = Api.client.submitForm<Token>(Api.loginUrl, params, false)// параметры в form
+            Api.client.cookies("post-app-back.herokuapp.com")
+            Log.i("cookie", Api.client.cookies("post-app-back.herokuapp.com").toString())
             mSettings.edit {
                 putString(APP_PREFERENCES_TOKEN, requestedToken.token)
             }
@@ -91,17 +91,17 @@ class LoginActivity : AppCompatActivity() {
         pd.setMessage("Creating")
         pd.show()
         try {
-            Api().client.cookies("post-app-back.herokuapp.com")
-            Log.i("cookie", Api().client.cookies("post-app-back.herokuapp.com").toString())
+            Api.client.cookies("post-app-back.herokuapp.com")
+            Log.i("cookie", Api.client.cookies("post-app-back.herokuapp.com").toString())
             val params = Parameters.build {
                 append("displayName", displayName)
                 append("email", email)
                 append("password", password)
                 append("avatar", avatar)
             }
-            val requestedToken = Api().client.submitForm<Token>(Api().registrationUrl, params, false)// параметры в form
-            Api().client.cookies("post-app-back.herokuapp.com")
-            Log.i("cookie", Api().client.cookies("post-app-back.herokuapp.com").toString())
+            val requestedToken = Api.client.submitForm<Token>(Api.registrationUrl, params, false)// параметры в form
+            Api.client.cookies("post-app-back.herokuapp.com")
+            Log.i("cookie", Api.client.cookies("post-app-back.herokuapp.com").toString())
             mSettings.edit {
                 putString(APP_PREFERENCES_TOKEN, requestedToken.token)
             }

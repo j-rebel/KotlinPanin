@@ -40,13 +40,15 @@ class MainActivity : YouTubeBaseActivity(), CoroutineScope by MainScope() {
     @KtorExperimentalAPI
     fun fetchData() = launch {
         fun selector(p: Post): Long = p.date
+        Api.client.cookies("post-app-back.herokuapp.com")
         val allPosts = withContext(Dispatchers.IO) {
-            Api().client.get<List<Post>>(Api().getAllPostsUrl) {
+            Api.client.get<List<Post>>(Api.getAllPostsUrl) {
                 header("Authorization", "Bearer $TOKEN")
                 //header("Cookie", Api().client.cookies("post-app-back.herokuapp.com"))
             }
         }
-        Log.i("cookie", Api().client.cookies("post-app-back.herokuapp.com").toString())
+        Api.client.cookies("post-app-back.herokuapp.com")
+        Log.i("cookie", Api.client.cookies("post-app-back.herokuapp.com").toString())
         allPosts.sortedByDescending { selector(it) }
         val userPosts = allPosts.filter { it.type != PostType.AD }.sortedByDescending { selector(it) }
         val adPosts = allPosts.filter { it.type == PostType.AD }.sortedByDescending { selector(it) }

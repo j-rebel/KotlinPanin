@@ -19,6 +19,7 @@ import com.google.android.youtube.player.YouTubeInitializationResult
 import com.google.android.youtube.player.YouTubePlayer
 import com.google.android.youtube.player.YouTubePlayerView
 import io.ktor.client.features.ClientRequestException
+import io.ktor.client.features.cookies.cookies
 import io.ktor.client.request.forms.submitForm
 import io.ktor.client.request.header
 import io.ktor.http.Parameters
@@ -306,12 +307,12 @@ class PostAdapter(private var items: List<PostUiModel>, private val context: Con
         val repostedAddress: TextView = view.repostedAddress
         val repostedGeoIcon: ImageView = view.repostedGeoIcon
         val repostedAdText: TextView = view.repostedAdText
-        val repostedLikesIcon: ImageView = view.repostedLikesIcon
+        /*val repostedLikesIcon: ImageView = view.repostedLikesIcon
         val repostedLikesCounter: TextView = view.repostedLikesCounter
         val repostedCommentsIcon: ImageView = view.repostedCommentsIcon
         val repostedCommentsCounter: TextView = view.repostedCommentsCounter
         val repostedSharesIcon: ImageView = view.repostedSharesIcon
-        val repostedSharesCounter: TextView = view.repostedSharesCounter
+        val repostedSharesCounter: TextView = view.repostedSharesCounter*/
     }
 
     fun setNoteList(newItems: List<PostUiModel>) {
@@ -323,14 +324,12 @@ class PostAdapter(private var items: List<PostUiModel>, private val context: Con
 
     @KtorExperimentalAPI
     fun addLike(postId: Long) = launch {
-
-
-
         try {
+            Api.client.cookies("post-app-back.herokuapp.com")
             val params = Parameters.build {
                 append("post", postId.toString())
             }
-            Api().client.submitForm<Token>(Api().likeUrl, params, false) {
+            Api.client.submitForm(Api.likeUrl, params, false) {
                 header("Authorization", "Bearer $TOKEN")
                 //header("Cookie", Api().client.cookies(" kkmkm"))
             }
