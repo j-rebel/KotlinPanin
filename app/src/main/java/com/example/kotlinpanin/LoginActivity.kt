@@ -16,9 +16,10 @@ import io.ktor.util.KtorExperimentalAPI
 import kotlinx.android.synthetic.main.activity_login.*
 import kotlinx.coroutines.*
 import androidx.core.content.edit
+import androidx.lifecycle.lifecycleScope
 
 
-class LoginActivity : AppCompatActivity(), CoroutineScope by MainScope() {
+class LoginActivity : AppCompatActivity() {
 
     lateinit var pd: ProgressDialog
     lateinit var mSettings: SharedPreferences
@@ -54,20 +55,18 @@ class LoginActivity : AppCompatActivity(), CoroutineScope by MainScope() {
     }
 
     @KtorExperimentalAPI
-    fun login(email: String, password: String) = launch {
+    fun login(email: String, password: String) = lifecycleScope.launch {
         pd.setTitle("Login")
         pd.setMessage("Processing")
         pd.show()
         try {
             Api().client.cookies("post-app-back.herokuapp.com")
             Log.i("cookie", Api().client.cookies("post-app-back.herokuapp.com").toString())
-            val requestedToken = withContext(Dispatchers.IO) {
-                val params = Parameters.build {
-                    append("email", email)
-                    append("password", password)
-                }
-                Api().client.submitForm<Token>(Api().loginUrl, params, false)// параметры в form
+            val params = Parameters.build {
+                append("email", email)
+                append("password", password)
             }
+            val requestedToken = Api().client.submitForm<Token>(Api().loginUrl, params, false)// параметры в form
             Api().client.cookies("post-app-back.herokuapp.com")
             Log.i("cookie", Api().client.cookies("post-app-back.herokuapp.com").toString())
             mSettings.edit {
@@ -83,19 +82,17 @@ class LoginActivity : AppCompatActivity(), CoroutineScope by MainScope() {
     }
 
     @KtorExperimentalAPI
-    fun registrate(email: String, password: String, displayName: String, avatar: String) = launch {
+    fun registrate(email: String, password: String, displayName: String, avatar: String) = lifecycleScope.launch {
         try {
             Api().client.cookies("post-app-back.herokuapp.com")
             Log.i("cookie", Api().client.cookies("post-app-back.herokuapp.com").toString())
-            val requestedToken = withContext(Dispatchers.IO) {
-                val params = Parameters.build {
-                    append("displayName", displayName)
-                    append("email", email)
-                    append("password", password)
-                    append("avatar", avatar)
-                }
-                Api().client.submitForm<Token>(Api().registrationUrl, params, false)// параметры в form
+            val params = Parameters.build {
+                append("displayName", displayName)
+                append("email", email)
+                append("password", password)
+                append("avatar", avatar)
             }
+            val requestedToken = Api().client.submitForm<Token>(Api().registrationUrl, params, false)// параметры в form
             Api().client.cookies("post-app-back.herokuapp.com")
             Log.i("cookie", Api().client.cookies("post-app-back.herokuapp.com").toString())
             mSettings.edit {

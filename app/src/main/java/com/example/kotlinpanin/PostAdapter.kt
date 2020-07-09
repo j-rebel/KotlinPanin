@@ -2,8 +2,6 @@ package com.example.kotlinpanin
 
 import android.content.Context
 import android.content.Intent
-import android.content.Intent.FLAG_ACTIVITY_NEW_TASK
-import android.content.SharedPreferences
 import android.net.Uri
 import android.os.Bundle
 import android.util.Log
@@ -21,10 +19,8 @@ import com.google.android.youtube.player.YouTubeInitializationResult
 import com.google.android.youtube.player.YouTubePlayer
 import com.google.android.youtube.player.YouTubePlayerView
 import io.ktor.client.features.ClientRequestException
-import io.ktor.client.features.cookies.cookies
 import io.ktor.client.request.forms.submitForm
 import io.ktor.client.request.header
-import io.ktor.client.request.post
 import io.ktor.http.Parameters
 import io.ktor.util.KtorExperimentalAPI
 import kotlinx.android.synthetic.main.post.view.adText
