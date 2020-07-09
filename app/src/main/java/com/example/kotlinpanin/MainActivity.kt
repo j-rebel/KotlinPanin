@@ -18,9 +18,7 @@ import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.coroutines.*
 
 class MainActivity : YouTubeBaseActivity(), CoroutineScope by MainScope() {
-
-    val APP_PREFERENCES = "mysettings"
-    val APP_PREFERENCES_TOKEN = "TOKEN"
+    
     var TOKEN = ""
 
     @KtorExperimentalAPI
@@ -89,6 +87,11 @@ class MainActivity : YouTubeBaseActivity(), CoroutineScope by MainScope() {
     override fun onDestroy() {
         super.onDestroy()
         cancel()
+    }
+
+    private companion object {
+        const val APP_PREFERENCES = "mysettings"
+        const val APP_PREFERENCES_TOKEN = "TOKEN"
     }
 
 }
