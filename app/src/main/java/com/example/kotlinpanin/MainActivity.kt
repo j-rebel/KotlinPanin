@@ -25,17 +25,11 @@ class MainActivity : YouTubeBaseActivity(), CoroutineScope by MainScope() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         Log.d("MainActivity", "onCreate")
+        setContentView(R.layout.activity_main)
         val mSettings: SharedPreferences = getSharedPreferences(APP_PREFERENCES, Context.MODE_PRIVATE)
         TOKEN = mSettings.getString(APP_PREFERENCES_TOKEN ,"").toString()
-        if (TOKEN.equals("")) {
-            val intent = Intent(this, LoginActivity::class.java)
-            startActivity(intent)
-        } else {
-            setContentView(R.layout.activity_main)
-            postList.layoutManager = LinearLayoutManager(this)
-            fetchData()
-        }
-
+        postList.layoutManager = LinearLayoutManager(this)
+        fetchData()
     }
 
     @KtorExperimentalAPI
