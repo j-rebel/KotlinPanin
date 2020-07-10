@@ -2,7 +2,6 @@ package com.example.kotlinpanin
 
 import android.content.Context
 import android.content.Intent
-import android.media.MediaPlayer
 import android.net.Uri
 import android.os.Bundle
 import android.util.Log
@@ -25,25 +24,6 @@ import io.ktor.client.request.forms.submitForm
 import io.ktor.client.request.header
 import io.ktor.http.Parameters
 import io.ktor.util.KtorExperimentalAPI
-import kotlinx.android.synthetic.main.post.view.adText
-import kotlinx.android.synthetic.main.post.view.address
-import kotlinx.android.synthetic.main.post.view.avatar
-import kotlinx.android.synthetic.main.post.view.commentsCounter
-import kotlinx.android.synthetic.main.post.view.commentsIcon
-import kotlinx.android.synthetic.main.post.view.date
-import kotlinx.android.synthetic.main.post.view.geoIcon
-import kotlinx.android.synthetic.main.post.view.hideBtn
-import kotlinx.android.synthetic.main.post.view.likesCounter
-import kotlinx.android.synthetic.main.post.view.likesIcon
-import kotlinx.android.synthetic.main.post.view.playBtn
-import kotlinx.android.synthetic.main.post.view.preview
-import kotlinx.android.synthetic.main.post.view.repostInfo
-import kotlinx.android.synthetic.main.post.view.sharesCounter
-import kotlinx.android.synthetic.main.post.view.sharesIcon
-import kotlinx.android.synthetic.main.post.view.text
-import kotlinx.android.synthetic.main.post.view.userName
-import kotlinx.android.synthetic.main.post.view.youtubeLayout
-import kotlinx.android.synthetic.main.post.view.youtubePlayerView
 import kotlinx.android.synthetic.main.post_test.view.*
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.MainScope
@@ -100,7 +80,7 @@ class PostAdapterTest(private var items: List<PostUiModel>, private val context:
 
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
-        var view: View = LayoutInflater.from(parent.context).inflate(R.layout.post_test, parent, false)
+        var view: View = LayoutInflater.from(parent.context).inflate(R.layout.post_text, parent, false)
         var vh: RecyclerView.ViewHolder = TextViewHolder(view)
         when (viewType) {
             PostUiModel.POST_TEXT -> {
