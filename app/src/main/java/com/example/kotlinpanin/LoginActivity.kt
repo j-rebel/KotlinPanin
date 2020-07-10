@@ -12,22 +12,19 @@ import androidx.core.view.isVisible
 import io.ktor.client.features.cookies.cookies
 import io.ktor.client.request.forms.submitForm
 import io.ktor.http.Parameters
-import io.ktor.util.KtorExperimentalAPI
 import kotlinx.android.synthetic.main.activity_login.*
 import kotlinx.coroutines.*
 import androidx.core.content.edit
 import androidx.lifecycle.lifecycleScope
-
 
 class LoginActivity : AppCompatActivity() {
 
     lateinit var pd: ProgressDialog
     lateinit var mSettings: SharedPreferences
 
-
-    @KtorExperimentalAPI
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        Log.d("LoginActivity", "onCreate")
         setContentView(R.layout.activity_login)
 
         mSettings = getSharedPreferences(APP_PREFERENCES, Context.MODE_PRIVATE)
@@ -54,7 +51,24 @@ class LoginActivity : AppCompatActivity() {
         }
     }
 
-    @KtorExperimentalAPI
+    override fun onDestroy() {
+        super.onDestroy()
+        Log.d("LoginActivity", "onDestroy")
+        finish()
+    }
+
+    override fun onStop() {
+        super.onStop()
+        Log.d("LoginActivity", "onStop")
+        finish()
+    }
+
+    override fun onPause() {
+        super.onPause()
+        Log.d("LoginActivity", "onPause")
+        finish()
+    }
+
     fun login(email: String, password: String) = lifecycleScope.launch {
         pd.setCancelable(false)
         pd.setTitle("Login")
@@ -75,16 +89,17 @@ class LoginActivity : AppCompatActivity() {
             }
             delay(3000)
             pd.hide()
+            pd.dismiss()
             val intent = Intent(App.applicationContext(), MainActivity::class.java)
             startActivity(intent)
         } catch (e: Exception) {
             Log.e("Login", e.message, Throwable())
         } finally {
             pd.hide()
+            pd.dismiss()
         }
     }
 
-    @KtorExperimentalAPI
     fun registrate(email: String, password: String, displayName: String, avatar: String) = lifecycleScope.launch {
         pd.setCancelable(false)
         pd.setTitle("New user")
@@ -106,6 +121,7 @@ class LoginActivity : AppCompatActivity() {
                 putString(APP_PREFERENCES_TOKEN, requestedToken.token)
             }
             pd.hide()
+            pd.dismiss()
             val intent = Intent(App.applicationContext(), MainActivity::class.java)
             startActivity(intent)
         } catch (e: Exception) {
@@ -113,6 +129,7 @@ class LoginActivity : AppCompatActivity() {
             Toast.makeText(applicationContext, "Failed to registrate", Toast.LENGTH_LONG).show()
         } finally {
             pd.hide()
+            pd.dismiss()
         }
     }
 

@@ -24,6 +24,7 @@ class MainActivity : YouTubeBaseActivity(), CoroutineScope by MainScope() {
     @KtorExperimentalAPI
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        Log.d("MainActivity", "onCreate")
         val mSettings: SharedPreferences = getSharedPreferences(APP_PREFERENCES, Context.MODE_PRIVATE)
         TOKEN = mSettings.getString(APP_PREFERENCES_TOKEN ,"").toString()
         if (TOKEN.equals("")) {
@@ -77,6 +78,7 @@ class MainActivity : YouTubeBaseActivity(), CoroutineScope by MainScope() {
 
             override fun onAnimationEnd(animation: Animation?) {
                 progressLayout.isVisible = false
+                Log.d("Animation", "ended")
             }
 
             override fun onAnimationStart(animation: Animation?) {
@@ -88,6 +90,21 @@ class MainActivity : YouTubeBaseActivity(), CoroutineScope by MainScope() {
 
     override fun onDestroy() {
         super.onDestroy()
+        Log.d("MainActivity", "onDestroy")
+        cancel()
+        finish()
+    }
+
+    override fun onStop() {
+        super.onStop()
+        Log.d("MainActivity", "onStop")
+        cancel()
+        finish()
+    }
+
+    override fun onPause() {
+        super.onPause()
+        Log.d("MainActivity", "onPause")
         cancel()
     }
 
