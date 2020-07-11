@@ -73,10 +73,12 @@ class MainActivity : YouTubeBaseActivity(), CoroutineScope by MainScope() {
 
             override fun onAnimationEnd(animation: Animation?) {
                 progressLayout.isVisible = false
+                fab.isVisible = true
                 Log.d("Animation", "ended")
             }
 
             override fun onAnimationStart(animation: Animation?) {
+                fab.isVisible = false
                 Log.d("Animation", "started")
             }
         })
