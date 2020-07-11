@@ -14,6 +14,11 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
+        <activity
+            android:name=".CreatePostActivity"
+            android:excludeFromRecents="true"
+            android:theme="@style/Theme.AppCompat.Light.Dialog.Alert"
+            android:label="@string/post_create_label" />
         <activity android:name=".SplashActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -22,8 +27,7 @@
             </intent-filter>
         </activity>
         <activity android:name=".LoginActivity" />
-        <activity android:name=".MainActivity">
-        </activity>
+        <activity android:name=".MainActivity" />
     </application>
 
 </manifest>

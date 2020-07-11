@@ -61,4 +61,21 @@
     <string name="btn_login">Login</string>
     <string name="btn_registrate">Registration</string>
     <string name="reg_chkbx">Already a user?</string>
+
+    <string name="post_param_text">Text</string>
+    <string name="post_param_video">YouTube video id</string>
+    <string name="post_param_address">Address</string>
+    <string name="post_param_longitude">Longitude</string>
+    <string name="post_param_latitude">Latitude</string>
+
+    <string-array name="post_types">
+        <item>TEXT</item>
+        <item>VIDEO</item>
+        <item>AD</item>
+        <item>EVENT</item>
+    </string-array>
+
+    <string name="post_create_label">Add new post</string>
+    <string name="post_create_btn">Add</string>
+
 </resources>

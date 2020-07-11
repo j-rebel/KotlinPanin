@@ -10,7 +10,6 @@ import android.view.animation.AnimationUtils
 import androidx.core.view.isVisible
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.android.youtube.player.YouTubeBaseActivity
-import io.ktor.client.features.cookies.cookies
 import io.ktor.client.request.get
 import io.ktor.client.request.header
 import io.ktor.util.KtorExperimentalAPI
@@ -33,6 +32,13 @@ class MainActivity : YouTubeBaseActivity(), CoroutineScope by MainScope() {
         COOKIE = mSettings.getString(APP_PREFERENCES_COOKIE ,"").toString()
         Log.d("Cookie", COOKIE)
         postList.layoutManager = LinearLayoutManager(this)
+
+        fab.setOnClickListener {
+            val intent = Intent(this, CreatePostActivity::class.java)
+            startActivity(intent)
+        }
+
+
         fetchData()
     }
 
