@@ -50,12 +50,12 @@ class MainActivity : YouTubeBaseActivity(), CoroutineScope by MainScope() {
         val adPosts = allPosts.filter { it.type == PostType.AD }.sortedByDescending { selector(it) }
         val adapterPosts: MutableList<Post> = mutableListOf<Post>()
         for (i in 0 until userPosts.size) {
-            if (i > 0 && i % 2 == 0) {
+            adapterPosts.add(userPosts[i])
+            if (i > 0 && i % 2 == 1) {
                 for (j in 0 until adPosts.size) {
                     adapterPosts.add(adPosts[j])
                 }
             }
-            adapterPosts.add(userPosts[i])
         }
 
         postList.adapter = PostAdapterTest(adapterPosts.map(Post::toUiModel), App.applicationContext(), TOKEN, COOKIE)
