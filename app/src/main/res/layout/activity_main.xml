@@ -16,7 +16,8 @@
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/postList"
             android:layout_width="match_parent"
-            android:layout_height="match_parent">
+            android:layout_height="match_parent"
+            tools:listitem="@layout/post_text">
 
         </androidx.recyclerview.widget.RecyclerView>
 
@@ -24,7 +25,8 @@
             android:id="@+id/progressLayout"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:background="@color/colorWhite">
+            android:background="@color/colorWhite"
+            tools:visibility="gone">
 
             <ProgressBar
                 android:id="@+id/progressBar"

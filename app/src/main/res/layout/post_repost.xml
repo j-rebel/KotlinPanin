@@ -333,6 +333,7 @@
                 android:layout_marginEnd="5dp"
                 android:layout_weight="1"
                 android:contentDescription="@string/app_name"
+                android:visibility="gone"
                 tool:srcCompat="@drawable/comments_yes" />
 
             <TextView
@@ -343,6 +344,7 @@
                 android:layout_weight="1"
                 android:minWidth="25dp"
                 android:textColor="@color/colorBlack"
+                android:visibility="gone"
                 tool:text="20" />
 
             <ImageView
@@ -353,6 +355,7 @@
                 android:layout_marginEnd="5dp"
                 android:layout_weight="1"
                 android:contentDescription="@string/app_name"
+                android:visibility="gone"
                 tool:srcCompat="@drawable/shares_yes" />
 
             <TextView
@@ -363,6 +366,7 @@
                 android:layout_weight="1"
                 android:minWidth="25dp"
                 android:textColor="@color/colorBlack"
+                android:visibility="gone"
                 tool:text="7" />
 
         </LinearLayout>
