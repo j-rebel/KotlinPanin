@@ -19,7 +19,6 @@ import com.google.android.youtube.player.YouTubeInitializationResult
 import com.google.android.youtube.player.YouTubePlayer
 import com.google.android.youtube.player.YouTubePlayerView
 import io.ktor.client.features.ClientRequestException
-import io.ktor.client.features.cookies.cookies
 import io.ktor.client.request.forms.submitForm
 import io.ktor.client.request.header
 import io.ktor.http.Parameters
@@ -29,8 +28,7 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.MainScope
 import kotlinx.coroutines.launch
 
-
-class PostAdapterTest(private var items: List<PostUiModel>, private val context: Context, private  val TOKEN: String) : RecyclerView.Adapter<RecyclerView.ViewHolder>(), CoroutineScope by MainScope() {
+class PostAdapterTest(private var items: List<PostUiModel>, private val context: Context, private  val TOKEN: String, private  val COOKIE: String) : RecyclerView.Adapter<RecyclerView.ViewHolder>(), CoroutineScope by MainScope() {
 
     open class TextViewHolder(view: View) : RecyclerView.ViewHolder(view) {
         val avatar: ImageView = view.avatar
@@ -293,13 +291,12 @@ class PostAdapterTest(private var items: List<PostUiModel>, private val context:
     @KtorExperimentalAPI
     fun addLike(postId: Long) = launch {
         try {
-            Api.client.cookies("post-app-back.herokuapp.com")
             val params = Parameters.build {
                 append("post", postId.toString())
             }
             Api.client.submitForm(Api.likeUrl, params, false) {
                 header("Authorization", "Bearer $TOKEN")
-                //header("Cookie", Api().client.cookies(" kkmkm"))
+                header("Cookie", COOKIE)
             }
         } catch (e: ClientRequestException) {
             Log.e("Error", e.message)

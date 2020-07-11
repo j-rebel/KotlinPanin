@@ -9,13 +9,14 @@ import android.util.Log
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.isVisible
-import io.ktor.client.features.cookies.cookies
 import io.ktor.client.request.forms.submitForm
 import io.ktor.http.Parameters
 import kotlinx.android.synthetic.main.activity_login.*
 import kotlinx.coroutines.*
 import androidx.core.content.edit
 import androidx.lifecycle.lifecycleScope
+import io.ktor.client.request.get
+import io.ktor.client.statement.HttpResponse
 
 class LoginActivity : AppCompatActivity() {
 
@@ -75,17 +76,17 @@ class LoginActivity : AppCompatActivity() {
         pd.setMessage("Processing")
         pd.show()
         try {
-            Api.client.cookies("post-app-back.herokuapp.com")
-            Log.i("cookie", Api.client.cookies("post-app-back.herokuapp.com").toString())
             val params = Parameters.build {
                 append("email", email)
                 append("password", password)
             }
+            val request = Api.client.submitForm<HttpResponse>(Api.loginUrl, params, false).headers["Set-Cookie"].toString()
+            val cookie = request.substring(0, request.indexOf(";"))
             val requestedToken = Api.client.submitForm<Token>(Api.loginUrl, params, false)// параметры в form
-            Api.client.cookies("post-app-back.herokuapp.com")
-            Log.i("cookie", Api.client.cookies("post-app-back.herokuapp.com").toString())
+            Log.i("cookie", cookie)
             mSettings.edit {
                 putString(APP_PREFERENCES_TOKEN, requestedToken.token)
+                putString(APP_PREFERENCES_COOKIE, cookie)
             }
             delay(3000)
             pd.hide()
@@ -106,35 +107,24 @@ class LoginActivity : AppCompatActivity() {
         pd.setMessage("Creating")
         pd.show()
         try {
-            Api.client.cookies("post-app-back.herokuapp.com")
-            Log.i("cookie", Api.client.cookies("post-app-back.herokuapp.com").toString())
             val params = Parameters.build {
                 append("displayName", displayName)
                 append("email", email)
                 append("password", password)
                 append("avatar", avatar)
             }
-            val requestedToken = Api.client.submitForm<Token>(Api.registrationUrl, params, false)// параметры в form
-            Api.client.cookies("post-app-back.herokuapp.com")
-            Log.i("cookie", Api.client.cookies("post-app-back.herokuapp.com").toString())
-            mSettings.edit {
-                putString(APP_PREFERENCES_TOKEN, requestedToken.token)
-            }
-            pd.hide()
-            pd.dismiss()
-            val intent = Intent(App.applicationContext(), MainActivity::class.java)
-            startActivity(intent)
+            Api.client.submitForm<Token>(Api.registrationUrl, params, false)
+            delay(2000)
+            login(email, password)
         } catch (e: Exception) {
             Log.e("Registration", e.message, Throwable())
             Toast.makeText(applicationContext, "Failed to registrate", Toast.LENGTH_LONG).show()
-        } finally {
-            pd.hide()
-            pd.dismiss()
         }
     }
 
     private companion object {
         const val APP_PREFERENCES = "mysettings"
         const val APP_PREFERENCES_TOKEN = "TOKEN"
+        const val APP_PREFERENCES_COOKIE = "COOKIE"
     }
 }

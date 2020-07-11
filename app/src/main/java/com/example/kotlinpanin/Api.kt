@@ -22,9 +22,5 @@ object Api {
         install(JsonFeature) {
             serializer = GsonSerializer()
         }
-        install(HttpCookies) {
-            // Will keep an in-memory map with all the cookies from previous requests.
-            storage = AcceptAllCookiesStorage()
-        }
     }
 }

@@ -20,6 +20,7 @@ import kotlinx.coroutines.*
 class MainActivity : YouTubeBaseActivity(), CoroutineScope by MainScope() {
 
     var TOKEN = ""
+    var COOKIE = ""
 
     @KtorExperimentalAPI
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -28,6 +29,9 @@ class MainActivity : YouTubeBaseActivity(), CoroutineScope by MainScope() {
         setContentView(R.layout.activity_main)
         val mSettings: SharedPreferences = getSharedPreferences(APP_PREFERENCES, Context.MODE_PRIVATE)
         TOKEN = mSettings.getString(APP_PREFERENCES_TOKEN ,"").toString()
+        Log.d("Token", TOKEN)
+        COOKIE = mSettings.getString(APP_PREFERENCES_COOKIE ,"").toString()
+        Log.d("Cookie", COOKIE)
         postList.layoutManager = LinearLayoutManager(this)
         fetchData()
     }
@@ -35,15 +39,12 @@ class MainActivity : YouTubeBaseActivity(), CoroutineScope by MainScope() {
     @KtorExperimentalAPI
     fun fetchData() = launch {
         fun selector(p: Post): Long = p.date
-        Api.client.cookies("post-app-back.herokuapp.com")
         val allPosts = withContext(Dispatchers.IO) {
             Api.client.get<List<Post>>(Api.getAllPostsUrl) {
                 header("Authorization", "Bearer $TOKEN")
-                //header("Cookie", Api().client.cookies("post-app-back.herokuapp.com"))
+                header("Cookie", COOKIE)
             }
         }
-        Api.client.cookies("post-app-back.herokuapp.com")
-        Log.i("cookie", Api.client.cookies("post-app-back.herokuapp.com").toString())
         allPosts.sortedByDescending { selector(it) }
         val userPosts = allPosts.filter { it.type != PostType.AD }.sortedByDescending { selector(it) }
         val adPosts = allPosts.filter { it.type == PostType.AD }.sortedByDescending { selector(it) }
@@ -57,7 +58,7 @@ class MainActivity : YouTubeBaseActivity(), CoroutineScope by MainScope() {
             adapterPosts.add(userPosts[i])
         }
 
-        postList.adapter = PostAdapterTest(adapterPosts.map(Post::toUiModel), App.applicationContext(), TOKEN)
+        postList.adapter = PostAdapterTest(adapterPosts.map(Post::toUiModel), App.applicationContext(), TOKEN, COOKIE)
         for (i in 1..adapterPosts.size) {
             delay(500)
             progressBar.incrementProgressBy(100 / adapterPosts.size)
@@ -105,6 +106,7 @@ class MainActivity : YouTubeBaseActivity(), CoroutineScope by MainScope() {
     private companion object {
         const val APP_PREFERENCES = "mysettings"
         const val APP_PREFERENCES_TOKEN = "TOKEN"
+        const val APP_PREFERENCES_COOKIE = "COOKIE"
     }
 
 }
