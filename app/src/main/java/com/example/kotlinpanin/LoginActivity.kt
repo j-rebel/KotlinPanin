@@ -15,7 +15,6 @@ import kotlinx.android.synthetic.main.activity_login.*
 import kotlinx.coroutines.*
 import androidx.core.content.edit
 import androidx.lifecycle.lifecycleScope
-import io.ktor.client.request.get
 import io.ktor.client.statement.HttpResponse
 
 class LoginActivity : AppCompatActivity() {
@@ -55,19 +54,16 @@ class LoginActivity : AppCompatActivity() {
     override fun onDestroy() {
         super.onDestroy()
         Log.d("LoginActivity", "onDestroy")
-        finish()
     }
 
     override fun onStop() {
         super.onStop()
         Log.d("LoginActivity", "onStop")
-        finish()
     }
 
     override fun onPause() {
         super.onPause()
         Log.d("LoginActivity", "onPause")
-        finish()
     }
 
     fun login(email: String, password: String) = lifecycleScope.launch {
@@ -93,6 +89,7 @@ class LoginActivity : AppCompatActivity() {
             pd.dismiss()
             val intent = Intent(App.applicationContext(), MainActivity::class.java)
             startActivity(intent)
+            finish()
         } catch (e: Exception) {
             Log.e("Login", e.message, Throwable())
         } finally {

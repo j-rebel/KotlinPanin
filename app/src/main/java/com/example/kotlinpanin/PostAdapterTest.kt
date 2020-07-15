@@ -76,7 +76,6 @@ class PostAdapterTest(private var items: List<PostUiModel>, private val context:
         val repostedAdText: TextView = view.repostedAdText
     }
 
-
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
         var view: View = LayoutInflater.from(parent.context).inflate(R.layout.post_text, parent, false)
         var vh: RecyclerView.ViewHolder = TextViewHolder(view)
@@ -116,6 +115,7 @@ class PostAdapterTest(private var items: List<PostUiModel>, private val context:
         }
     }
 
+    @KtorExperimentalAPI
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
         val item: PostUiModel = items.get(position)
         val itemData = item.post
@@ -296,7 +296,6 @@ class PostAdapterTest(private var items: List<PostUiModel>, private val context:
             }
             Api.client.submitForm(Api.likeUrl, params, false) {
                 header("Authorization", "Bearer $TOKEN")
-                //header("Cookie", COOKIE)
             }
         } catch (e: ClientRequestException) {
             Log.e("Error", e.message)

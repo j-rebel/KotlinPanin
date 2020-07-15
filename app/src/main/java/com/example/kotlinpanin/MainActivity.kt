@@ -19,26 +19,18 @@ import kotlinx.coroutines.*
 class MainActivity : YouTubeBaseActivity(), CoroutineScope by MainScope() {
 
     var TOKEN = ""
-    //var COOKIE = ""
 
     @KtorExperimentalAPI
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        Log.d("MainActivity", "onCreate")
         setContentView(R.layout.activity_main)
         val mSettings: SharedPreferences = getSharedPreferences(APP_PREFERENCES, Context.MODE_PRIVATE)
         TOKEN = mSettings.getString(APP_PREFERENCES_TOKEN ,"").toString()
-        Log.d("Token", TOKEN)
-        //COOKIE = mSettings.getString(APP_PREFERENCES_COOKIE ,"").toString()
-        //Log.d("Cookie", COOKIE)
         postList.layoutManager = LinearLayoutManager(this)
-
         fab.setOnClickListener {
             val intent = Intent(this, CreatePostActivity::class.java)
             startActivity(intent)
         }
-
-
         fetchData()
     }
 
@@ -48,7 +40,6 @@ class MainActivity : YouTubeBaseActivity(), CoroutineScope by MainScope() {
         val allPosts = withContext(Dispatchers.IO) {
             Api.client.get<List<Post>>(Api.getAllPostsUrl) {
                 header("Authorization", "Bearer $TOKEN")
-                //header("Cookie", COOKIE)
             }
         }
         allPosts.sortedByDescending { selector(it) }
@@ -95,14 +86,12 @@ class MainActivity : YouTubeBaseActivity(), CoroutineScope by MainScope() {
         super.onDestroy()
         Log.d("MainActivity", "onDestroy")
         cancel()
-        finish()
     }
 
     override fun onStop() {
         super.onStop()
         Log.d("MainActivity", "onStop")
         cancel()
-        finish()
     }
 
     override fun onPause() {
@@ -114,7 +103,5 @@ class MainActivity : YouTubeBaseActivity(), CoroutineScope by MainScope() {
     private companion object {
         const val APP_PREFERENCES = "mysettings"
         const val APP_PREFERENCES_TOKEN = "TOKEN"
-        //const val APP_PREFERENCES_COOKIE = "COOKIE"
     }
-
 }
