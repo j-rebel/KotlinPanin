@@ -76,13 +76,9 @@ class LoginActivity : AppCompatActivity() {
                 append("email", email)
                 append("password", password)
             }
-            val request = Api.client.submitForm<HttpResponse>(Api.loginUrl, params, false).headers["Set-Cookie"].toString()
-            val cookie = request.substring(0, request.indexOf(";"))
-            val requestedToken = Api.client.submitForm<Token>(Api.loginUrl, params, false)// параметры в form
-            Log.i("cookie", cookie)
+            val requestedToken = Api.client.submitForm<Token>(Api.loginUrl, params, false)
             mSettings.edit {
                 putString(APP_PREFERENCES_TOKEN, requestedToken.token)
-                //putString(APP_PREFERENCES_COOKIE, cookie)
             }
             pd.hide()
             pd.dismiss()
@@ -120,6 +116,5 @@ class LoginActivity : AppCompatActivity() {
     private companion object {
         const val APP_PREFERENCES = "mysettings"
         const val APP_PREFERENCES_TOKEN = "TOKEN"
-        //const val APP_PREFERENCES_COOKIE = "COOKIE"
     }
 }
