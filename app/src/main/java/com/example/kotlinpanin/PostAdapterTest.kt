@@ -1,9 +1,11 @@
 package com.example.kotlinpanin
 
+import android.app.AlertDialog
 import android.content.Context
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
+import android.text.InputType
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
@@ -27,6 +29,7 @@ import kotlinx.android.synthetic.main.post_test.view.*
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.MainScope
 import kotlinx.coroutines.launch
+
 
 class PostAdapterTest(private var items: List<PostUiModel>, private val context: Context, private  val TOKEN: String) : RecyclerView.Adapter<RecyclerView.ViewHolder>(), CoroutineScope by MainScope() {
 
@@ -171,6 +174,70 @@ class PostAdapterTest(private var items: List<PostUiModel>, private val context:
             addLike(postUiModel.post.id)
         }
 
+        (holder as TextViewHolder).likesIcon.setOnClickListener {
+            val postUiModel = items[position]
+            if (itemData.isLiked) {
+                newItems = items.toMutableList().apply {
+                    set(position, postUiModel.copy(
+                            post = itemData.copy(isLiked = false, likes = itemData.likes.dec()))
+                    )
+                }
+                Glide.with(context)
+                        .load(R.drawable.likes_none)
+                        .into((holder as TextViewHolder).likesIcon)
+                (holder as TextViewHolder).likesCounter.text = postUiModel.likesCounterString
+            } else {
+                newItems = items.toMutableList().apply {
+                    set(position, postUiModel.copy(
+                            post = itemData.copy(isLiked = true, likes = itemData.likes.inc()))
+                    )
+                }
+                Glide.with(context)
+                        .load(R.drawable.likes_yes)
+                        .into((holder as TextViewHolder).likesIcon)
+                (holder as TextViewHolder).likesCounter.text = postUiModel.likesCounterString
+            }
+            setNoteList(newItems)
+            addLike(postUiModel.post.id)
+        }
+
+        (holder as TextViewHolder).sharesIcon.setOnClickListener {
+            val postUiModel = items[position]
+            if (itemData.isShared) {
+                newItems = items.toMutableList().apply {
+                    set(position, postUiModel.copy(
+                            post = itemData.copy(isShared = false, shares = itemData.shares.dec()))
+                    )
+                }
+                Glide.with(context)
+                        .load(R.drawable.shares_none)
+                        .into((holder as TextViewHolder).sharesIcon)
+                (holder as TextViewHolder).sharesCounter.text = postUiModel.sharesCounterString
+                addShare(postUiModel.post.id, "removing share")
+            } else {
+                newItems = items.toMutableList().apply {
+                    set(position, postUiModel.copy(
+                            post = itemData.copy(isShared = true, shares = itemData.shares.inc()))
+                    )
+                }
+                Glide.with(context)
+                        .load(R.drawable.shares_yes)
+                        .into((holder as TextViewHolder).sharesIcon)
+                (holder as TextViewHolder).sharesCounter.text = postUiModel.sharesCounterString
+                val builder = AlertDialog.Builder(context)
+                builder.setTitle("Repost")
+                val input = EditText(context)
+                input.inputType = InputType.TYPE_CLASS_TEXT
+                builder.setView(input)
+                builder.setPositiveButton("Add") { dialog, which ->
+                    addShare(postUiModel.post.id, input.text.toString())
+                }
+                builder.setNegativeButton("Cancel") { dialog, which -> dialog.cancel() }
+                builder.show()
+            }
+            setNoteList(newItems)
+        }
+
         when (item.type) {
             PostUiModel.POST_VIDEO -> {
                 Glide.with(context)
@@ -301,4 +368,19 @@ class PostAdapterTest(private var items: List<PostUiModel>, private val context:
             Log.e("Error", e.message)
         }
     }
-}
+
+    @KtorExperimentalAPI
+    fun addShare(postId: Long, text: String) = launch {
+            try {
+                val params = Parameters.build {
+                    append("post", postId.toString())
+                    append("text", text)
+                }
+                Api.client.submitForm(Api.shareUrl, params, false) {
+                    header("Authorization", "Bearer $TOKEN")
+                }
+            } catch (e: ClientRequestException) {
+                Log.e("Error", e.message)
+            }
+        }
+    }

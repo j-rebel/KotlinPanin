@@ -17,8 +17,8 @@
         <activity
             android:name=".CreatePostActivity"
             android:excludeFromRecents="true"
-            android:theme="@style/Theme.AppCompat.Light.Dialog.Alert"
-            android:label="@string/post_create_label" />
+            android:label="@string/post_create_label"
+            android:theme="@style/Theme.AppCompat.Light.Dialog.Alert" />
         <activity android:name=".SplashActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

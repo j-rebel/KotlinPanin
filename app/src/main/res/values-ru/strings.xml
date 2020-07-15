@@ -78,4 +78,8 @@
     <string name="post_create_label">Add new post</string>
     <string name="post_create_btn">Add</string>
 
+    <string name="repost_create_label">Repost</string>
+    <string name="repost_create_btn">Add</string>
+    <string name="repost_input">Comment</string>
+
 </resources>
