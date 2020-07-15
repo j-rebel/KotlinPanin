@@ -84,7 +84,6 @@ class LoginActivity : AppCompatActivity() {
                 putString(APP_PREFERENCES_TOKEN, requestedToken.token)
                 //putString(APP_PREFERENCES_COOKIE, cookie)
             }
-            delay(3000)
             pd.hide()
             pd.dismiss()
             val intent = Intent(App.applicationContext(), MainActivity::class.java)
@@ -111,7 +110,6 @@ class LoginActivity : AppCompatActivity() {
                 append("avatar", avatar)
             }
             Api.client.submitForm<Token>(Api.registrationUrl, params, false)
-            delay(2000)
             login(email, password)
         } catch (e: Exception) {
             Log.e("Registration", e.message, Throwable())

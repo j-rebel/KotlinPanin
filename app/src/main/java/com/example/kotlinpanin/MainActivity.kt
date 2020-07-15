@@ -57,7 +57,6 @@ class MainActivity : YouTubeBaseActivity(), CoroutineScope by MainScope() {
 
         postList.adapter = PostAdapterTest(adapterPosts.map(Post::toUiModel), App.applicationContext(), TOKEN)
         for (i in 1..adapterPosts.size) {
-            delay(500)
             progressBar.incrementProgressBy(100 / adapterPosts.size)
             progressText.text = App.applicationContext().getString(R.string.loading_progress, progressBar.progress)
         }
