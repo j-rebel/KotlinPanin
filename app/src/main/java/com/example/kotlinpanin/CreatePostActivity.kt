@@ -10,6 +10,7 @@ import androidx.lifecycle.lifecycleScope
 import io.ktor.client.features.ClientRequestException
 import io.ktor.client.request.forms.submitForm
 import io.ktor.client.request.header
+import io.ktor.client.statement.HttpResponse
 import io.ktor.http.Parameters
 import io.ktor.util.KtorExperimentalAPI
 import kotlinx.android.synthetic.main.activity_create_post.*
@@ -62,9 +63,10 @@ class CreatePostActivity : AppCompatActivity() {
                 append("geo_long", geoLong)
                 append("geo_lat", geoLat)
             }
-            Api.client.submitForm(Api.postUrl, params, false) {
+            Api.client.submitForm<HttpResponse>(Api.postUrl, params, false) {
                 header("Authorization", "Bearer $TOKEN")
             }
+            finish()
         } catch (e: ClientRequestException) {
             Log.e("Error", e.message)
         }
