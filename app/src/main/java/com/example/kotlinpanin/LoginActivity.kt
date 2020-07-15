@@ -15,11 +15,9 @@ import kotlinx.android.synthetic.main.activity_login.*
 import kotlinx.coroutines.*
 import androidx.core.content.edit
 import androidx.lifecycle.lifecycleScope
-import io.ktor.client.statement.HttpResponse
 
 class LoginActivity : AppCompatActivity() {
 
-    lateinit var pd: ProgressDialog
     lateinit var mSettings: SharedPreferences
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -28,9 +26,8 @@ class LoginActivity : AppCompatActivity() {
         setContentView(R.layout.activity_login)
 
         mSettings = getSharedPreferences(APP_PREFERENCES, Context.MODE_PRIVATE)
-        pd = ProgressDialog(this)
-        checkBox.setOnClickListener{
-            if(checkBox.isChecked) {
+        checkBox.setOnCheckedChangeListener { buttonView, isChecked ->
+            if (isChecked) {
                 btnRegestrate.isVisible = false
                 displayNameInput.isVisible = false
                 avatarInput.isVisible = false
@@ -67,10 +64,18 @@ class LoginActivity : AppCompatActivity() {
     }
 
     fun login(email: String, password: String) = lifecycleScope.launch {
-        pd.setCancelable(false)
-        pd.setTitle("Login")
-        pd.setMessage("Processing")
-        pd.show()
+        btnLogin.isVisible = false
+        emailInput.isEnabled = false
+        emailInput.isClickable = false
+        passInput.isEnabled = false
+        passInput.isClickable = false
+        displayNameInput.isEnabled = false
+        displayNameInput.isClickable = false
+        avatarInput.isEnabled = false
+        avatarInput.isClickable = false
+        checkBox.isEnabled = false
+        checkBox.isClickable = false
+        pb.isVisible = true
         try {
             val params = Parameters.build {
                 append("email", email)
@@ -80,24 +85,38 @@ class LoginActivity : AppCompatActivity() {
             mSettings.edit {
                 putString(APP_PREFERENCES_TOKEN, requestedToken.token)
             }
-            pd.hide()
-            pd.dismiss()
             val intent = Intent(App.applicationContext(), MainActivity::class.java)
             startActivity(intent)
             finish()
         } catch (e: Exception) {
             Log.e("Login", e.message, Throwable())
         } finally {
-            pd.hide()
-            pd.dismiss()
+            pb.isVisible = false
+            btnLogin.isVisible = true
+            emailInput.isEnabled = true
+            emailInput.isClickable = true
+            passInput.isEnabled = true
+            passInput.isClickable = true
+            displayNameInput.isEnabled = true
+            displayNameInput.isClickable = true
+            avatarInput.isEnabled = true
+            avatarInput.isClickable = true
+            checkBox.isEnabled = true
+            checkBox.isClickable = true
         }
     }
 
     fun registrate(email: String, password: String, displayName: String, avatar: String) = lifecycleScope.launch {
-        pd.setCancelable(false)
-        pd.setTitle("New user")
-        pd.setMessage("Creating")
-        pd.show()
+        btnRegestrate.isVisible = false
+        emailInput.isEnabled = false
+        emailInput.isClickable = false
+        passInput.isEnabled = false
+        passInput.isClickable = false
+        displayNameInput.isEnabled = false
+        displayNameInput.isClickable = false
+        avatarInput.isEnabled = false
+        avatarInput.isClickable = false
+        pb.isVisible = true
         try {
             val params = Parameters.build {
                 append("displayName", displayName)
