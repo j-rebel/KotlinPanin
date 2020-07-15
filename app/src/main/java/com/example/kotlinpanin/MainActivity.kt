@@ -19,7 +19,7 @@ import kotlinx.coroutines.*
 class MainActivity : YouTubeBaseActivity(), CoroutineScope by MainScope() {
 
     var TOKEN = ""
-    var COOKIE = ""
+    //var COOKIE = ""
 
     @KtorExperimentalAPI
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -29,8 +29,8 @@ class MainActivity : YouTubeBaseActivity(), CoroutineScope by MainScope() {
         val mSettings: SharedPreferences = getSharedPreferences(APP_PREFERENCES, Context.MODE_PRIVATE)
         TOKEN = mSettings.getString(APP_PREFERENCES_TOKEN ,"").toString()
         Log.d("Token", TOKEN)
-        COOKIE = mSettings.getString(APP_PREFERENCES_COOKIE ,"").toString()
-        Log.d("Cookie", COOKIE)
+        //COOKIE = mSettings.getString(APP_PREFERENCES_COOKIE ,"").toString()
+        //Log.d("Cookie", COOKIE)
         postList.layoutManager = LinearLayoutManager(this)
 
         fab.setOnClickListener {
@@ -48,7 +48,7 @@ class MainActivity : YouTubeBaseActivity(), CoroutineScope by MainScope() {
         val allPosts = withContext(Dispatchers.IO) {
             Api.client.get<List<Post>>(Api.getAllPostsUrl) {
                 header("Authorization", "Bearer $TOKEN")
-                header("Cookie", COOKIE)
+                //header("Cookie", COOKIE)
             }
         }
         allPosts.sortedByDescending { selector(it) }
@@ -64,7 +64,7 @@ class MainActivity : YouTubeBaseActivity(), CoroutineScope by MainScope() {
             }
         }
 
-        postList.adapter = PostAdapterTest(adapterPosts.map(Post::toUiModel), App.applicationContext(), TOKEN, COOKIE)
+        postList.adapter = PostAdapterTest(adapterPosts.map(Post::toUiModel), App.applicationContext(), TOKEN)
         for (i in 1..adapterPosts.size) {
             delay(500)
             progressBar.incrementProgressBy(100 / adapterPosts.size)
@@ -114,7 +114,7 @@ class MainActivity : YouTubeBaseActivity(), CoroutineScope by MainScope() {
     private companion object {
         const val APP_PREFERENCES = "mysettings"
         const val APP_PREFERENCES_TOKEN = "TOKEN"
-        const val APP_PREFERENCES_COOKIE = "COOKIE"
+        //const val APP_PREFERENCES_COOKIE = "COOKIE"
     }
 
 }

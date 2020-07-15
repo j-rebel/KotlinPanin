@@ -20,7 +20,7 @@ import kotlinx.coroutines.launch
 class CreatePostActivity : AppCompatActivity(), CoroutineScope by MainScope() {
 
     var TOKEN = ""
-    var COOKIE = ""
+    //var COOKIE = ""
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -29,8 +29,8 @@ class CreatePostActivity : AppCompatActivity(), CoroutineScope by MainScope() {
         val mSettings: SharedPreferences = getSharedPreferences(APP_PREFERENCES, Context.MODE_PRIVATE)
         TOKEN = mSettings.getString(APP_PREFERENCES_TOKEN,"").toString()
         Log.d("Token", TOKEN)
-        COOKIE = mSettings.getString(APP_PREFERENCES_COOKIE,"").toString()
-        Log.d("Cookie", COOKIE)
+        //COOKIE = mSettings.getString(APP_PREFERENCES_COOKIE,"").toString()
+        //Log.d("Cookie", COOKIE)
 
         val types: Array<String> = resources.getStringArray(R.array.post_types)
         // access the spinner
@@ -90,7 +90,7 @@ class CreatePostActivity : AppCompatActivity(), CoroutineScope by MainScope() {
             }
             Api.client.submitForm(Api.postUrl, params, false) {
                 header("Authorization", "Bearer $TOKEN")
-                header("Cookie", COOKIE)
+                //header("Cookie", COOKIE)
             }
         } catch (e: ClientRequestException) {
             Log.e("Error", e.message)
@@ -100,6 +100,6 @@ class CreatePostActivity : AppCompatActivity(), CoroutineScope by MainScope() {
     private companion object {
         const val APP_PREFERENCES = "mysettings"
         const val APP_PREFERENCES_TOKEN = "TOKEN"
-        const val APP_PREFERENCES_COOKIE = "COOKIE"
+        //const val APP_PREFERENCES_COOKIE = "COOKIE"
     }
 }

@@ -28,7 +28,7 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.MainScope
 import kotlinx.coroutines.launch
 
-class PostAdapterTest(private var items: List<PostUiModel>, private val context: Context, private  val TOKEN: String, private  val COOKIE: String) : RecyclerView.Adapter<RecyclerView.ViewHolder>(), CoroutineScope by MainScope() {
+class PostAdapterTest(private var items: List<PostUiModel>, private val context: Context, private  val TOKEN: String) : RecyclerView.Adapter<RecyclerView.ViewHolder>(), CoroutineScope by MainScope() {
 
     open class TextViewHolder(view: View) : RecyclerView.ViewHolder(view) {
         val avatar: ImageView = view.avatar
@@ -296,7 +296,7 @@ class PostAdapterTest(private var items: List<PostUiModel>, private val context:
             }
             Api.client.submitForm(Api.likeUrl, params, false) {
                 header("Authorization", "Bearer $TOKEN")
-                header("Cookie", COOKIE)
+                //header("Cookie", COOKIE)
             }
         } catch (e: ClientRequestException) {
             Log.e("Error", e.message)

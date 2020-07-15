@@ -86,7 +86,7 @@ class LoginActivity : AppCompatActivity() {
             Log.i("cookie", cookie)
             mSettings.edit {
                 putString(APP_PREFERENCES_TOKEN, requestedToken.token)
-                putString(APP_PREFERENCES_COOKIE, cookie)
+                //putString(APP_PREFERENCES_COOKIE, cookie)
             }
             delay(3000)
             pd.hide()
@@ -125,6 +125,6 @@ class LoginActivity : AppCompatActivity() {
     private companion object {
         const val APP_PREFERENCES = "mysettings"
         const val APP_PREFERENCES_TOKEN = "TOKEN"
-        const val APP_PREFERENCES_COOKIE = "COOKIE"
+        //const val APP_PREFERENCES_COOKIE = "COOKIE"
     }
 }
