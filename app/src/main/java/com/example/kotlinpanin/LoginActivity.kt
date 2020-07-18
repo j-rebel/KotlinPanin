@@ -48,21 +48,6 @@ class LoginActivity : AppCompatActivity() {
         }
     }
 
-    override fun onDestroy() {
-        super.onDestroy()
-        Log.d("LoginActivity", "onDestroy")
-    }
-
-    override fun onStop() {
-        super.onStop()
-        Log.d("LoginActivity", "onStop")
-    }
-
-    override fun onPause() {
-        super.onPause()
-        Log.d("LoginActivity", "onPause")
-    }
-
     fun login(email: String, password: String) = lifecycleScope.launch {
         btnLogin.isVisible = false
         emailInput.isEnabled = false

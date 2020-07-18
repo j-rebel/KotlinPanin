@@ -88,18 +88,6 @@ class MainActivity : YouTubeBaseActivity(), CoroutineScope by MainScope() {
         cancel()
     }
 
-    override fun onStop() {
-        super.onStop()
-        Log.d("MainActivity", "onStop")
-        cancel()
-    }
-
-    override fun onPause() {
-        super.onPause()
-        Log.d("MainActivity", "onPause")
-        cancel()
-    }
-
     private companion object {
         const val APP_PREFERENCES = "mysettings"
         const val APP_PREFERENCES_TOKEN = "TOKEN"

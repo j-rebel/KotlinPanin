@@ -28,6 +28,7 @@ import io.ktor.util.KtorExperimentalAPI
 import kotlinx.android.synthetic.main.post_test.view.*
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.MainScope
+import kotlinx.coroutines.cancel
 import kotlinx.coroutines.launch
 
 
@@ -146,33 +147,6 @@ class PostAdapterTest(private var items: List<PostUiModel>, private val context:
 
         (holder as TextViewHolder).sharesCounter.text = item.sharesCounterString
         (holder as TextViewHolder).sharesIcon.setImageResource(item.sharesIcon)
-
-        (holder as TextViewHolder).likesIcon.setOnClickListener {
-            val postUiModel = items[position]
-            if (itemData.isLiked) {
-                newItems = items.toMutableList().apply {
-                    set(position, postUiModel.copy(
-                            post = itemData.copy(isLiked = false, likes = itemData.likes.dec()))
-                    )
-                }
-                Glide.with(context)
-                        .load(R.drawable.likes_none)
-                        .into((holder as TextViewHolder).likesIcon)
-                (holder as TextViewHolder).likesCounter.text = postUiModel.likesCounterString
-            } else {
-                newItems = items.toMutableList().apply {
-                    set(position, postUiModel.copy(
-                            post = itemData.copy(isLiked = true, likes = itemData.likes.inc()))
-                    )
-                }
-                Glide.with(context)
-                        .load(R.drawable.likes_yes)
-                        .into((holder as TextViewHolder).likesIcon)
-                (holder as TextViewHolder).likesCounter.text = postUiModel.likesCounterString
-            }
-            setNoteList(newItems)
-            addLike(postUiModel.post.id)
-        }
 
         (holder as TextViewHolder).likesIcon.setOnClickListener {
             val postUiModel = items[position]
