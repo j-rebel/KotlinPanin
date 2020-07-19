@@ -445,6 +445,22 @@
 
         </LinearLayout>
 
+        <Button
+            android:id="@+id/loadNew"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/load_newer"
+            tool:layout_editor_absoluteX="10dp"
+            tool:layout_editor_absoluteY="10dp" />
+
+        <Button
+            android:id="@+id/loadOld"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/load_older"
+            tool:layout_editor_absoluteX="10dp"
+            tool:layout_editor_absoluteY="10dp" />
+
     </androidx.constraintlayout.widget.ConstraintLayout>
 
 </androidx.cardview.widget.CardView>

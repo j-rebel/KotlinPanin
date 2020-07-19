@@ -18,6 +18,8 @@ data class PostUiModel(val post: Post, val dateFormatted: String, val type: Int)
         const val POST_VIDEO = 2
         const val POST_EVENT = 3
         const val POST_REPOST = 4
+        const val POST_HEAD = 5
+        const val POST_TAIL = 6
     }
 }
 
@@ -59,5 +61,7 @@ private fun postTypeToInt(postType: PostType): Int {
         PostType.VIDEO -> 2
         PostType.EVENT -> 3
         PostType.REPOST -> 4
+        PostType.HEAD -> 5
+        PostType.TAIL -> 6
     }
 }

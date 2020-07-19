@@ -10,6 +10,8 @@ object Api {
     val loginUrl = "${baseUrl}users/login"
     val registrationUrl = "${baseUrl}users/create"
     val getAllPostsUrl = "${baseUrl}posts/all-app"
+    val getNewerPostsUrl = "${baseUrl}posts/all-app-new"
+    val getOlderPostsUrl = "${baseUrl}posts/all-app-old"
     val postUrl = "${baseUrl}posts"
     val uploadFileUrl = "${baseUrl}upload"
     val downloadFileUrl = "${baseUrl}download"

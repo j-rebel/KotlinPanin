@@ -10,6 +10,7 @@ import android.view.animation.AnimationUtils
 import androidx.core.view.isVisible
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.android.youtube.player.YouTubeBaseActivity
+import io.ktor.client.features.ClientRequestException
 import io.ktor.client.request.get
 import io.ktor.client.request.header
 import io.ktor.util.KtorExperimentalAPI
@@ -32,7 +33,12 @@ class MainActivity : YouTubeBaseActivity(), CoroutineScope by MainScope() {
             val intent = Intent(this, CreatePostActivity::class.java)
             startActivity(intent)
         }
-        fetchData()
+        try {
+            fetchData()
+        } catch (e: ClientRequestException) {
+            val intent = Intent(this, LoginActivity::class.java)
+            startActivity(intent)
+        }
     }
 
     @KtorExperimentalAPI
@@ -54,8 +60,10 @@ class MainActivity : YouTubeBaseActivity(), CoroutineScope by MainScope() {
                     adapterPosts.add(adPosts[j])
                 }
             }
-        }
 
+        }
+        adapterPosts.add(0, Post(-1, "head", "head", Long.MAX_VALUE, PostType.HEAD, null, "head", null, null, null, 0, 0, 0, false, false, false))
+        adapterPosts.add(adapterPosts.size, Post(-1, "tail", "tail", Long.MAX_VALUE, PostType.TAIL, null, "tail", null, null, null, 0, 0, 0, false, false, false))
         postList.adapter = PostAdapterTest(adapterPosts.map(Post::toUiModel), context, TOKEN)
         for (i in 1..adapterPosts.size) {
             progressBar.incrementProgressBy(100 / adapterPosts.size)

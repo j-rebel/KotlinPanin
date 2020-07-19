@@ -87,4 +87,7 @@
     <string name="repost_create_btn">Add</string>
     <string name="repost_input">Comment</string>
 
+    <string name="load_newer">Load recent</string>
+    <string name="load_older">Load older</string>
+
 </resources>

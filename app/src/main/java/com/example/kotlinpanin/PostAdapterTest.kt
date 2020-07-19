@@ -22,17 +22,24 @@ import com.google.android.youtube.player.YouTubePlayer
 import com.google.android.youtube.player.YouTubePlayerView
 import io.ktor.client.features.ClientRequestException
 import io.ktor.client.request.forms.submitForm
+import io.ktor.client.request.get
 import io.ktor.client.request.header
+import io.ktor.http.HttpMethod
 import io.ktor.http.Parameters
 import io.ktor.util.KtorExperimentalAPI
 import kotlinx.android.synthetic.main.post_test.view.*
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.MainScope
-import kotlinx.coroutines.cancel
-import kotlinx.coroutines.launch
+import kotlinx.coroutines.*
 
 
 class PostAdapterTest(private var items: List<PostUiModel>, private val context: Context, private  val TOKEN: String) : RecyclerView.Adapter<RecyclerView.ViewHolder>(), CoroutineScope by MainScope() {
+
+    class HeadViewHolder(view: View) : TextViewHolder(view) {
+        val btnLoadNew = view.loadNew
+    }
+
+    class TailViewHolder(view: View) : TextViewHolder(view) {
+        val btnLoadOld = view.loadOld
+    }
 
     open class TextViewHolder(view: View) : RecyclerView.ViewHolder(view) {
         val avatar: ImageView = view.avatar
@@ -82,7 +89,7 @@ class PostAdapterTest(private var items: List<PostUiModel>, private val context:
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
         var view: View = LayoutInflater.from(parent.context).inflate(R.layout.post_text, parent, false)
-        var vh: RecyclerView.ViewHolder = TextViewHolder(view)
+        lateinit var vh: RecyclerView.ViewHolder
         when (viewType) {
             PostUiModel.POST_TEXT -> {
                 view = LayoutInflater.from(parent.context).inflate(R.layout.post_text, parent, false)
@@ -104,6 +111,14 @@ class PostAdapterTest(private var items: List<PostUiModel>, private val context:
                 view = LayoutInflater.from(parent.context).inflate(R.layout.post_repost, parent, false)
                 vh = RepostViewHolder(view)
             }
+            PostUiModel.POST_HEAD -> {
+                view = LayoutInflater.from(parent.context).inflate(R.layout.post_head, parent, false)
+                vh = HeadViewHolder(view)
+            }
+            PostUiModel.POST_TAIL -> {
+                view = LayoutInflater.from(parent.context).inflate(R.layout.post_tail, parent, false)
+                vh = TailViewHolder(view)
+            }
         }
         return vh
     }
@@ -115,6 +130,8 @@ class PostAdapterTest(private var items: List<PostUiModel>, private val context:
             2 -> PostUiModel.POST_VIDEO
             3 -> PostUiModel.POST_EVENT
             4 -> PostUiModel.POST_REPOST
+            5 -> PostUiModel.POST_HEAD
+            6 -> PostUiModel.POST_TAIL
             else -> PostUiModel.POST_TEXT
         }
     }
@@ -213,6 +230,17 @@ class PostAdapterTest(private var items: List<PostUiModel>, private val context:
         }
 
         when (item.type) {
+            PostUiModel.POST_HEAD -> {
+                (holder as HeadViewHolder).btnLoadNew.setOnClickListener {
+                    fetchNewer()
+                }
+
+            }
+            PostUiModel.POST_TAIL -> {
+                (holder as TailViewHolder).btnLoadOld.setOnClickListener {
+                    fetchOlder()
+                }
+            }
             PostUiModel.POST_VIDEO -> {
                 Glide.with(context)
                         .load("https://img.youtube.com/vi/" + itemData.video + "/0.jpg")
@@ -357,4 +385,80 @@ class PostAdapterTest(private var items: List<PostUiModel>, private val context:
                 Log.e("Error", e.message)
             }
         }
+
+    @KtorExperimentalAPI
+    fun fetchData() = launch {
+        fun selector(p: Post): Long = p.date
+        val allPosts = withContext(Dispatchers.IO) {
+            Api.client.get<List<Post>>(Api.getAllPostsUrl) {
+                header("Authorization", "Bearer $TOKEN")
+            }
+        }
+        allPosts.sortedByDescending { selector(it) }
+        val userPosts = allPosts.filter { it.type != PostType.AD }.sortedByDescending { selector(it) }
+        val adPosts = allPosts.filter { it.type == PostType.AD }.sortedByDescending { selector(it) }
+        val adapterPosts: MutableList<Post> = mutableListOf<Post>()
+        for (i in 0 until userPosts.size) {
+            adapterPosts.add(userPosts[i])
+            if (i > 0 && i % 2 == 1) {
+                for (j in 0 until adPosts.size) {
+                    adapterPosts.add(adPosts[j])
+                }
+            }
+
+        }
+        adapterPosts.add(0, Post(-1, "head", "head", Long.MAX_VALUE, PostType.HEAD, null, "head", null, null, null, 0, 0, 0, false, false, false))
+        adapterPosts.add(adapterPosts.size, Post(-1, "tail", "tail", Long.MAX_VALUE, PostType.TAIL, null, "tail", null, null, null, 0, 0, 0, false, false, false))
+        setNoteList(adapterPosts.map(Post::toUiModel))
+    }
+
+    @KtorExperimentalAPI
+    fun fetchOlder() = launch {
+        val idList: MutableList<Long> = mutableListOf<Long>()
+        for(item: PostUiModel in items) {
+            if(item.post.id > 0) {
+                idList.add(item.post.id)
+            }
+        }
+        val lastItemId = idList.min()
+        val params = Parameters.build {
+            append("id", lastItemId.toString())
+        }
+        Log.i("last item", lastItemId.toString())
+        val olderPosts = Api.client.submitForm<List<Post>>(Api.getOlderPostsUrl, params, false) {
+            header("Authorization", "Bearer $TOKEN")
+            method = HttpMethod.Get
+        }
+        val adapterPosts: MutableList<Post> = mutableListOf<Post>()
+        for(item: PostUiModel in items) {
+            adapterPosts.add(item.post)
+        }
+        adapterPosts.addAll(adapterPosts.size - 1, olderPosts)
+        setNoteList(adapterPosts.map(Post::toUiModel))
+    }
+
+    @KtorExperimentalAPI
+    fun fetchNewer() = launch {
+        val idList: MutableList<Long> = mutableListOf<Long>()
+        for(item: PostUiModel in items) {
+            if(item.post.id > 0) {
+                idList.add(item.post.id)
+            }
+        }
+        val firstItemId = idList.max()
+        val params = Parameters.build {
+            append("id", firstItemId.toString())
+        }
+        Log.i("first item", firstItemId.toString())
+        val newerPosts = Api.client.submitForm<List<Post>>(Api.getNewerPostsUrl, params, false) {
+            header("Authorization", "Bearer $TOKEN")
+            method = HttpMethod.Get
+        }
+        val adapterPosts: MutableList<Post> = mutableListOf<Post>()
+        for(item: PostUiModel in items) {
+            adapterPosts.add(item.post)
+        }
+        adapterPosts.addAll(1, newerPosts)
+        setNoteList(adapterPosts.map(Post::toUiModel))
+    }
     }
